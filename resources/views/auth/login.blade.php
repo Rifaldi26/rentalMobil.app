@@ -27,14 +27,14 @@
     <form id="form-login" method="POST" action="{{ route('login') }}">
         @csrf
 
-        {{-- Session Error --}}
+        {{-- Session Status --}}
         @if (session('status'))
             <div class="toast show success" style="position:relative;transform:none;margin-bottom:16px;text-align:center;">
                 {{ session('status') }}
             </div>
         @endif
 
-        @if ($errors->any())
+        @if ($errors->any() && !old('name'))
             <div class="toast show error" style="position:relative;transform:none;margin-bottom:16px;text-align:center;">
                 {{ $errors->first() }}
             </div>
@@ -57,7 +57,9 @@
                 required
             >
             @error('email')
-                <div class="field-error">{{ $message }}</div>
+                @unless(old('name'))
+                    <div class="field-error">{{ $message }}</div>
+                @endunless
             @enderror
         </div>
 
@@ -79,10 +81,12 @@
                 <button type="button" class="input-icon" onclick="togglePw('pw-login', this)">👁️</button>
             </div>
             @error('password')
-                <div class="field-error">{{ $message }}</div>
+                @unless(old('name'))
+                    <div class="field-error">{{ $message }}</div>
+                @endunless
             @enderror
 
-            {{-- Remember Me --}}
+            {{-- Remember Me & Lupa Password --}}
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
                 <label style="font-size:13px;color:var(--gray-500);display:flex;align-items:center;gap:6px;cursor:pointer;">
                     <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
@@ -112,45 +116,20 @@
             </svg>
             Lanjutkan dengan Google
         </button>
-
-        {{-- Demo Accounts --}}
-        <div class="divider">Akun Demo</div>
-        <div class="demo-grid">
-            <button type="button" class="btn-demo"
-                onclick="fillDemo('pelanggan@demo.com','Customer@1234')">
-                👤 Pelanggan
-            </button>
-            <button type="button" class="btn-demo"
-                onclick="fillDemo('admin@demo.com','Admin@1234')">
-                🔑 Admin
-            </button>
-        </div>
     </form>
 
     {{-- ════ REGISTER FORM ════ --}}
     <form id="form-register" method="POST" action="{{ route('register') }}" style="display:none;">
         @csrf
 
-        {{-- Role Selection --}}
-        <div class="form-group">
-            <label class="form-label">Saya ingin <span class="req">*</span></label>
-            <div class="role-group">
-                <label class="role-option selected" onclick="selectRole('customer', this)">
-                    <input type="radio" class="role-radio" name="role" value="customer" checked>
-                    <div class="role-icon">🚗</div>
-                    <div class="role-name">Menyewa</div>
-                    <div class="role-desc">Pelanggan</div>
-                </label>
-                <label class="role-option" onclick="selectRole('partner', this)">
-                    <input type="radio" class="role-radio" name="role" value="partner">
-                    <div class="role-icon">🤝</div>
-                    <div class="role-name">Menyewakan</div>
-                    <div class="role-desc">Menjadi Mitra</div>
-                </label>
+        {{-- Error Register --}}
+        @if ($errors->any() && old('name'))
+            <div class="toast show error" style="position:relative;transform:none;margin-bottom:16px;text-align:center;">
+                {{ $errors->first() }}
             </div>
-        </div>
+        @endif
 
-        {{-- Nama --}}
+        {{-- Nama Lengkap --}}
         <div class="form-group">
             <label class="form-label" for="reg-name">
                 Nama Lengkap <span class="req">*</span>
@@ -190,22 +169,25 @@
             @enderror
         </div>
 
-        {{-- No HP --}}
+        {{-- Nomor HP --}}
         <div class="form-group">
-            <label class="form-label" for="reg-phone">
+            <label class="form-label" for="reg-no_hp">
                 Nomor HP <span class="req">*</span>
             </label>
             <input
-                class="form-input @error('phone') error @enderror"
+                class="form-input @error('no_hp') error @enderror"
                 type="tel"
-                id="reg-phone"
-                name="phone"
+                id="reg-no_hp"
+                name="no_hp"
                 placeholder="08xxxxxxxxxx"
-                value="{{ old('phone') }}"
+                value="{{ old('no_hp') }}"
                 autocomplete="tel"
                 required
+
+                oninput="this.value = this.value.replace(/[^0-9+]/g, '')"
+                onpaste="handlePasteNoHp(event)"
             >
-            @error('phone')
+            @error('no_hp')
                 <div class="field-error">{{ $message }}</div>
             @enderror
         </div>
@@ -229,6 +211,24 @@
             @error('password')
                 <div class="field-error">{{ $message }}</div>
             @enderror
+        </div>
+
+        {{-- Konfirmasi Password --}}
+        <div class="form-group">
+            <label class="form-label" for="pw-confirm">
+                Konfirmasi Kata Sandi <span class="req">*</span>
+            </label>
+            <div class="input-wrap">
+                <input
+                    class="form-input"
+                    type="password"
+                    id="pw-confirm"
+                    name="password_confirmation"
+                    placeholder="Ulangi kata sandi"
+                    required
+                >
+                <button type="button" class="input-icon" onclick="togglePw('pw-confirm', this)">👁️</button>
+            </div>
         </div>
 
         {{-- Submit --}}
@@ -260,7 +260,6 @@
 <div class="toast" id="toast"></div>
 
 <script>
-let selectedRole = 'customer';
 let toastTimer;
 
 // ─── Tab Switch ───────────────────────────────────────────
@@ -272,26 +271,12 @@ function showTab(tab) {
     document.getElementById('form-register').style.display = isLogin ? 'none' : '';
 }
 
-// ─── Role Selection ───────────────────────────────────────
-function selectRole(role, el) {
-    selectedRole = role;
-    document.querySelectorAll('.role-option').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-}
-
 // ─── Toggle Password ──────────────────────────────────────
 function togglePw(id, btn) {
     const input = document.getElementById(id);
     const isText = input.type === 'text';
     input.type = isText ? 'password' : 'text';
     btn.textContent = isText ? '👁️' : '🙈';
-}
-
-// ─── Fill Demo Account ────────────────────────────────────
-function fillDemo(email, pass) {
-    document.querySelector('#form-login [name="email"]').value    = email;
-    document.querySelector('#form-login [name="password"]').value = pass;
-    showToast('✅ Akun demo diisi — klik Masuk');
 }
 
 // ─── Google Auth ──────────────────────────────────────────
@@ -319,6 +304,18 @@ function showToast(msg, type = '') {
     toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
 }
 
+
+// ─── menyaring karakter ────────────────────────────────────
+function handlePasteNoHp(event) {
+    let pastedData = (event.clipboardData || window.clipboardData).getData('text');
+    
+    let cleanedData = pastedData.replace(/[^0-9+]/g, '');
+    
+    event.preventDefault();
+    
+    document.getElementById('reg-no_hp').value = cleanedData;
+}
+
 // ─── Loading on Submit ────────────────────────────────────
 document.getElementById('form-login').addEventListener('submit', function () {
     setLoading('btn-login', 'spin-login', true);
@@ -328,11 +325,20 @@ document.getElementById('form-register').addEventListener('submit', function () 
     setLoading('btn-register', 'spin-register', true);
 });
 
-// ─── Jika ada error dari Laravel, tampilkan tab yang tepat ───
-@if ($errors->hasBag('default') || $errors->any())
-    @if (old('name') || old('phone') || old('role'))
-        showTab('register');
-    @endif
+// ─── Validasi password confirmation (sisi klien) ─────────
+document.getElementById('form-register').addEventListener('submit', function (e) {
+    const pw      = document.getElementById('pw-reg').value;
+    const confirm = document.getElementById('pw-confirm').value;
+    if (pw !== confirm) {
+        e.preventDefault();
+        showToast('❌ Konfirmasi kata sandi tidak cocok', 'error');
+        setLoading('btn-register', 'spin-register', false);
+    }
+});
+
+// ─── Auto buka tab register jika ada error register ──────
+@if ($errors->any() && old('name'))
+    showTab('register');
 @endif
 </script>
 
