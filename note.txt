@@ -1,0 +1,21 @@
+#clear cache 
+php artisan route:clear && php artisan config:clear && php artisan cache:clear
+
+#update github
+git status
+git add .
+git commit -m "..."
+git push origin main
+
+#connect to github
+git remote add origin https://github.com/Rifaldi26/rentalMobil.app
+
+#turn on server
+php artisan serve
+npm run dev
+
+///
+
+php artisan serve --host=0.0.0.0 --port=8000
+npm run dev -- --host
+ngrok http 8000
