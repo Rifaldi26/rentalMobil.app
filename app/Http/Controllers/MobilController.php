@@ -11,9 +11,16 @@ class MobilController extends Controller
     /**
      * Tampilkan semua mobil (Admin)
      */
-    public function index()
+    public function index(Request $request)
     {
-        $mobils = Mobil::latest()->paginate(10);
+        $query = Mobil::latest();
+ 
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+ 
+        $mobils = $query->paginate(10)->withQueryString();
+ 
         return view('admin.mobil.index', compact('mobils'));
     }
 

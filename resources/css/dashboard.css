@@ -547,4 +547,70 @@ body {
   animation: shimmer 1.4s infinite;
   border-radius: var(--radius-sm);
 }
+/* =========================================
+   PERBAIKAN CSS PAGINATION CUSTOM
+   ========================================= */
+
+/* 1. Sembunyikan blok navigasi sederhana versi mobile bawaan */
+nav div.d-sm-none {
+    display: none !important;
+}
+
+/* 2. Paksa wadah utama angka agar muncul dengan rapi di tengah halaman */
+nav div.flex-sm-fill {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* 3. Sembunyikan tulisan teks "Showing 1 to 10 of 21 results" agar tampilan bersih */
+nav div.flex-sm-fill > div:first-child {
+    display: none !important;
+}
+
+/* 4. Hilangkan format list bawaan browser dan susun tombol menyamping */
+.pagination {
+    display: flex !important;
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin: 15px 0 0 0 !important;
+    gap: 6px;
+}
+
+/* 5. Desain kotak tombol angka */
+.pagination .page-item .page-link {
+    display: inline-block;
+    padding: 8px 14px;
+    color: var(--gray-700, #374151);
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Efek Hover (saat kursor di atas tombol) */
+.pagination .page-item:not(.disabled):not(.active) .page-link:hover {
+    background-color: #f3f4f6;
+    color: var(--brand-400, #2563eb);
+    border-color: #d1d5db;
+}
+
+/* Tampilan tombol saat halaman sedang aktif */
+.pagination .page-item.active .page-link {
+    background-color: var(--brand-400, #2563eb);
+    color: #ffffff;
+    border-color: var(--brand-400, #2563eb);
+}
+
+/* Tampilan tombol panah ketika sudah di batas awal / akhir halaman */
+.pagination .page-item.disabled .page-link {
+    color: #9ca3af;
+    background-color: #f9fafb;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+    pointer-events: none;
+}
 @keyframes shimmer { to { background-position: -200% 0; } }
