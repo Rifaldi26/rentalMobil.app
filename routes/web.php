@@ -32,6 +32,10 @@ Route::get('/dashboard', function () {
 // ─── Route Pelanggan ─────────────────────────────────────────────────────
 // Semua route berikut membutuhkan login + email terverifikasi
 Route::middleware(['auth', 'verified'])->group(function () {
+    
+    Route::get('/users/dashboard', fn() => view('users.dashboard'))->name('users.dashboard');
+
+    Route::get('/users/chat', fn() => view('users.chat'))->name('users.chat');
 
     // ── Profil Pelanggan ──────────────────────────────────────────────
     // Menampilkan form edit profil pelanggan
