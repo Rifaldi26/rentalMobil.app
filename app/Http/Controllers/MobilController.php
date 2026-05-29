@@ -126,4 +126,12 @@ class MobilController extends Controller
 
         return back()->with('success', 'Status mobil diperbarui!');
     }
+
+    /**
+     * Tampilkan detail mobil untuk pelanggan
+     */
+    public function show(Mobil $mobil)
+    {
+        return view('users.mobil.show', compact('mobil'));
+    }
 }

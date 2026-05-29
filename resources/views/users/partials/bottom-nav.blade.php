@@ -1,11 +1,10 @@
 {{-- resources/views/users/partials/bottom-nav.blade.php --}}
-@php $pemesananPending = \App\Models\Pemesanan::where('status','pending')->count(); @endphp
 
 <nav class="bottom-nav">
 
     {{-- Beranda --}}
-    <a href="{{ route('users.dashboard') }}"
-       class="nav-item {{ request()->routeIs('users.dashboard') ? 'active' : '' }}"
+    <a href="{{ route('dashboard') }}"
+       class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"
        style="text-decoration:none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
@@ -14,40 +13,33 @@
         Beranda
     </a>
 
-    {{-- Pemesanan --}}
-    <a href="{{ route('users.pemesanan.index') }}"
-       class="nav-item {{ request()->routeIs('users.pemesanan.*') ? 'active' : '' }}"
-       style="text-decoration:none;position:relative;">
+    {{-- Booking --}}
+    <a href="{{ route('user.pemesanan.index') }}"
+       class="nav-item {{ request()->routeIs('user.pemesanan.*') ? 'active' : '' }}"
+       style="text-decoration:none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
             <line x1="16" x2="16" y1="2" y2="6"/>
             <line x1="8" x2="8" y1="2" y2="6"/>
             <line x1="3" x2="21" y1="10" y2="10"/>
         </svg>
-        @if ($pemesananPending > 0)
-            <span style="position:absolute;top:6px;right:calc(50% - 24px);background:var(--danger);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:10px;">
-                {{ $pemesananPending }}
-            </span>
-        @endif
-        Pemesanan
+        Booking
     </a>
 
-    {{-- Tombol Tengah — WishList --}}
+    {{-- Tombol Tengah — Favorit --}}
     <div class="nav-center">
-        <a href="{{ route('users.mobil.index') }}" class="nav-center-btn"
+        <a href="{{ route('user.favorit') }}"
+           class="nav-center-btn"
            style="display:flex;align-items:center;justify-content:center;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-                <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/>
-                <rect width="13" height="8" x="8" y="13" rx="2"/>
-                <path d="M19 17v-4"/>
-                <path d="M21 13h-6"/>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
         </a>
     </div>
 
     {{-- Pesan --}}
-    <a href="{{ route('users.chat') }}"
-       class="nav-item {{ request()->routeIs('users.chat') ? 'active' : '' }}"
+    <a href="{{ route('user.chat') }}"
+       class="nav-item {{ request()->routeIs('user.chat') ? 'active' : '' }}"
        style="text-decoration:none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -56,8 +48,8 @@
     </a>
 
     {{-- Profil --}}
-    <a href="{{ route('users.profil') }}"
-       class="nav-item {{ request()->routeIs('users.profil') ? 'active' : '' }}"
+    <a href="{{ route('user.profil') }}"
+       class="nav-item {{ request()->routeIs('user.profil') ? 'active' : '' }}"
        style="text-decoration:none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="8" r="4"/>

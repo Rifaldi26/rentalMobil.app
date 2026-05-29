@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesan — Admin</title>
+    <title>Pesan — Rental Mobil</title>
     @vite(['resources/css/dashboard.css'])
 </head>
 <body>
 
 <nav class="nav">
-    <button onclick="window.location.href='{{ route('users.dashboard') }}'"
+    <button onclick="window.location.href='{{ route('dashboard') }}'"
         style="background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;color:var(--gray-700);">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
             <path d="M19 12H5M12 5l-7 7 7 7"/>
@@ -21,37 +21,33 @@
 
 <div class="content" style="padding-bottom:100px;">
 
-    {{-- ─── List Percakapan ─── --}}
-    @php
-        $pelangganDenganPesan = \App\Models\User::where('role', 'pelanggan')
-            ->latest()
-            ->get();
-    @endphp
+    {{-- List Percakapan --}}
+    <div style="padding-top:8px;">
+        {{-- Admin --}}
+        <div class="chat-item" onclick="bukaChat('admin', 'Admin Rental', 'AD')">
+            <div class="chat-avatar" style="background:var(--brand-100);color:var(--brand-600);">AD</div>
+            <div class="chat-meta">
+                <div class="chat-name">Admin Rental</div>
+                <div class="chat-preview">Ada yang bisa kami bantu? 😊</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+                <div class="chat-time">Tadi</div>
+            </div>
+        </div>
+    </div>
 
-    @if ($pelangganDenganPesan->isEmpty())
-        <div style="text-align:center;padding:80px 20px;color:var(--gray-500);">
-            <div style="font-size:48px;margin-bottom:12px;">💬</div>
-            <div style="font-weight:600;">Belum ada percakapan</div>
-            <div style="font-size:13px;margin-top:4px;">Pesan dari pelanggan akan muncul di sini</div>
-        </div>
-    @else
-        <div style="padding-top:8px;">
-            @foreach ($pelangganDenganPesan as $pelanggan)
-                <div class="chat-item" onclick="bukaChat({{ $pelanggan->id }}, '{{ addslashes($pelanggan->name) }}', '{{ strtoupper(substr($pelanggan->name, 0, 2)) }}')">
-                    <div class="chat-avatar">
-                        {{ strtoupper(substr($pelanggan->name, 0, 2)) }}
-                    </div>
-                    <div class="chat-meta">
-                        <div class="chat-name">{{ $pelanggan->name }}</div>
-                        <div class="chat-preview">{{ $pelanggan->no_hp ?? $pelanggan->email }}</div>
-                    </div>
-                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
-                        <div class="chat-time">{{ $pelanggan->created_at->diffForHumans() }}</div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    @endif
+    {{-- Empty state jika tidak ada percakapan --}}
+    {{--
+    <div style="text-align:center;padding:80px 20px;color:var(--gray-500);">
+        <div style="font-size:48px;margin-bottom:12px;">💬</div>
+        <div style="font-weight:600;">Belum ada percakapan</div>
+        <div style="font-size:13px;margin-top:4px;">Hubungi admin jika ada pertanyaan</div>
+        <button onclick="bukaChat('admin','Admin Rental','AD')"
+            style="margin-top:16px;padding:10px 20px;background:var(--brand-400);color:#fff;border:none;border-radius:var(--radius-md);font-size:13px;font-weight:700;cursor:pointer;">
+            💬 Hubungi Admin
+        </button>
+    </div>
+    --}}
 
 </div>
 
@@ -71,7 +67,7 @@
         </div>
         <div>
             <div id="chat-nama" style="font-size:15px;font-weight:700;color:var(--gray-900);"></div>
-            <div style="font-size:11px;color:var(--success);">● Pelanggan</div>
+            <div style="font-size:11px;color:var(--success);">● Online</div>
         </div>
     </div>
 
@@ -99,32 +95,26 @@
     </div>
 </div>
 
-@include('admin.partials.bottom-nav')
+@include('users.partials.bottom-nav')
 
 <script>
-let chatLawanId   = null;
-let chatMessages  = {};
+let chatLawanId  = null;
+let chatMessages = {};
 
-// Dummy pesan untuk static UI
 const dummyPesan = [
-    { dari: 'lawan', pesan: 'Halo admin, saya mau tanya soal pemesanan saya', waktu: '09.01' },
-    { dari: 'saya',  pesan: 'Halo! Ada yang bisa kami bantu? 😊', waktu: '09.02' },
-    { dari: 'lawan', pesan: 'Kapan mobil saya bisa dikonfirmasi?', waktu: '09.03' },
-    { dari: 'saya',  pesan: 'Akan segera kami proses, mohon tunggu sebentar 🙏', waktu: '09.05' },
+    { dari: 'lawan', pesan: 'Halo! Ada yang bisa kami bantu? 😊', waktu: '09.00' },
+    { dari: 'saya',  pesan: 'Halo, saya mau tanya soal pemesanan saya', waktu: '09.01' },
+    { dari: 'lawan', pesan: 'Tentu, bisa ceritakan lebih lanjut?', waktu: '09.02' },
 ];
 
 function bukaChat(lawanId, lawanNama, inisial) {
     chatLawanId = lawanId;
-
     document.getElementById('chat-nama').textContent   = lawanNama;
     document.getElementById('chat-avatar').textContent = inisial;
-
     renderPesan(lawanId);
-
     const modal = document.getElementById('modal-chat');
     modal.style.display = 'flex';
     modal.style.flexDirection = 'column';
-
     setTimeout(scrollKeBawah, 100);
 }
 
@@ -147,15 +137,12 @@ function renderPesan(lawanId) {
     pesans.forEach(m => {
         const wrap = document.createElement('div');
         wrap.className = `bubble-wrap ${m.dari}`;
-
         const bubble = document.createElement('div');
         bubble.className = `bubble ${m.dari}`;
         bubble.textContent = m.pesan;
-
         const time = document.createElement('div');
         time.className = 'bubble-time';
         time.textContent = m.waktu;
-
         wrap.appendChild(bubble);
         wrap.appendChild(time);
         container.appendChild(wrap);
@@ -166,14 +153,9 @@ function kirimPesan() {
     const input = document.getElementById('chat-input');
     const teks  = input.value.trim();
     if (!teks || !chatLawanId) return;
-
     const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-
-    if (!chatMessages[chatLawanId]) {
-        chatMessages[chatLawanId] = [...dummyPesan];
-    }
+    if (!chatMessages[chatLawanId]) chatMessages[chatLawanId] = [...dummyPesan];
     chatMessages[chatLawanId].push({ dari: 'saya', pesan: teks, waktu });
-
     renderPesan(chatLawanId);
     input.value = '';
     input.style.height = 'auto';
@@ -181,10 +163,7 @@ function kirimPesan() {
 }
 
 function enterKirim(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        kirimPesan();
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); kirimPesan(); }
 }
 
 function autoResize(el) {

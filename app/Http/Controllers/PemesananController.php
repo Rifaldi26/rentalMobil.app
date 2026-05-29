@@ -12,6 +12,12 @@ class PemesananController extends Controller
     /**
      * Form buat pemesanan baru
      */
+    // Menampilkan pemesanan milik pelanggan yang sedang login
+    public function userIndex()
+    {
+        return view('users.pemesanan.index');
+    }
+    
     public function create(Request $request)
     {
         $mobil = Mobil::findOrFail($request->mobil_id);

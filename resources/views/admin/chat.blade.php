@@ -310,11 +310,16 @@
 <body>
 
 <div class="content" style="padding-top: 10px !important; margin-top: 0 !important; padding-bottom: 100px;">
-
-    {{-- Header Halaman Pesan --}}
-    <div class="chat-main-header">
-        <h1>Pesan</h1>
-    </div>
+    <nav class="nav">
+    <button onclick="window.location.href='{{ route('admin.dashboard') }}'"
+        style="background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;color:var(--gray-700);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+    </button>
+    <div class="nav-brand" style="font-size:16px;">Pesan</div>
+    <div style="width:36px;"></div>
+    </nav>
 
     {{-- Pencarian --}}
     <div class="search-wrapper">
