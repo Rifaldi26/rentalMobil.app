@@ -42,7 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Halaman profil pelanggan — statistik & menu akun
     Route::get('/profil',     fn() => view('users.profil'))->name('user.profil');
     // Halaman wishlist / mobil yang difavoritkan pelanggan
-    Route::get('/favorit',    fn() => view('users.favorit'))->name('user.favorit');
+    Route::get('/favorit', [FavoritController::class, 'index'])->name('user.favorit');
     // Halaman detail mobil untuk pelanggan
     Route::get('/mobil/{mobil}', [MobilController::class, 'show'])->name('user.mobil.show');
 

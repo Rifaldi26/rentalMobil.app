@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beranda — Rental Mobil</title>
     @vite(['resources/css/dashboard.css'])
@@ -186,9 +187,8 @@
 @include('users.partials.bottom-nav')
 
 <script>
-let toastTimer;
+var toastTimer;
 
-// Filter kategori berdasarkan merek
 function filterCategory(el, merek) {
     document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
@@ -197,10 +197,9 @@ function filterCategory(el, merek) {
     });
 }
 
-// Toggle favorit — kirim ke server via fetch
 function toggleFavorit(e, btn, mobilId) {
     e.stopPropagation();
-    const isFav = btn.textContent === '❤️';
+    const isFav = btn.textContent.trim() === '❤️';
     btn.textContent = isFav ? '🤍' : '❤️';
 
     fetch(`/favorit/${mobilId}/toggle`, {
@@ -210,10 +209,12 @@ function toggleFavorit(e, btn, mobilId) {
                 ?? '{{ csrf_token() }}',
             'Accept': 'application/json',
         }
-    }).catch(() => {
-        // Rollback jika gagal
+    })
+    .then(res => res.json())
+    .then(data => showToast(data.message))
+    .catch(() => {
         btn.textContent = isFav ? '❤️' : '🤍';
-        showToast('Gagal update favorit', 'error');
+        showToast('Gagal update favorit');
     });
 }
 

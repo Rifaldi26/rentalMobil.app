@@ -54,4 +54,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Pemesanan::class);
     }
+
+    // Relasi: satu user punya banyak faforit
+    public function favorits()
+    {
+        return $this->hasMany(Favorit::class);
+    }
 }
