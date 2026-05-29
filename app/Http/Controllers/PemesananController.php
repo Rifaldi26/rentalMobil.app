@@ -28,7 +28,7 @@ class PemesananController extends Controller
                 ->with('error', 'Maaf, mobil ini sedang tidak tersedia.');
         }
 
-        return view('pemesanan.create', compact('mobil'));
+        return view('users.pemesanan.create', compact('mobil'));
     }
 
     /**
