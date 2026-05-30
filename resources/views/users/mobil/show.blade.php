@@ -828,18 +828,21 @@ function toggleDeskripsi() {
 /* ─── Wishlist toggle via fetch (AJAX) ──────────────────────
    Tidak reload halaman, langsung update UI + toast.          */
 function toggleWishlist(btn) {
-    const url    = btn.dataset.url;
-    const icon   = document.getElementById('heart-icon');
-    const isFav  = btn.dataset.fav === 'true';   // state SEKARANG sebelum toggle
+    const url     = btn.dataset.url;
+    const icon    = document.getElementById('heart-icon');
+    const mobilId = btn.dataset.url.match(/\/favorit\/(\d+)\//)?.[1];
+    const isFav   = btn.dataset.fav === 'true';
     const willFav = !isFav;
 
-    // Optimistic UI — update tampilan langsung
+    // Optimistic UI
     btn.classList.toggle('wishlisted', willFav);
     icon.setAttribute('fill',   willFav ? '#fca5a5' : 'none');
     icon.setAttribute('stroke', willFav ? '#dc2626' : 'var(--gray-700)');
-    btn.dataset.fav   = willFav ? 'true' : 'false';
-    btn.title         = willFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
-    btn.disabled      = true;   // cegah double-tap
+    btn.dataset.fav = willFav ? 'true' : 'false';
+    btn.title       = willFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
+    btn.disabled    = true;
+    // Simpan ke sessionStorage → dibaca dashboard saat back (tanpa delay)
+    if (mobilId) sessionStorage.setItem('fav_' + mobilId, willFav ? 'true' : 'false');
 
     fetch(url, {
         method : 'POST',
@@ -852,21 +855,23 @@ function toggleWishlist(btn) {
     })
     .then(res => res.json())
     .then(data => {
-        // Sinkronkan state dengan respons server (jaga-jaga jika konflik)
         const serverFav = data.favorited;
         btn.classList.toggle('wishlisted', serverFav);
         icon.setAttribute('fill',   serverFav ? '#fca5a5' : 'none');
         icon.setAttribute('stroke', serverFav ? '#dc2626' : 'var(--gray-700)');
         btn.dataset.fav = serverFav ? 'true' : 'false';
         btn.title       = serverFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
+        // Sinkronisasi ke sessionStorage dengan nilai server
+        if (mobilId) sessionStorage.setItem('fav_' + mobilId, serverFav ? 'true' : 'false');
         showToast(serverFav ? '❤️ Ditambahkan ke favorit' : '🤍 Dihapus dari favorit');
     })
     .catch(() => {
-        // Rollback jika request gagal
+        // Rollback
         btn.classList.toggle('wishlisted', isFav);
         icon.setAttribute('fill',   isFav ? '#fca5a5' : 'none');
         icon.setAttribute('stroke', isFav ? '#dc2626' : 'var(--gray-700)');
         btn.dataset.fav = isFav ? 'true' : 'false';
+        if (mobilId) sessionStorage.setItem('fav_' + mobilId, isFav ? 'true' : 'false');
         showToast('⚠️ Gagal, coba lagi', 'error');
     })
     .finally(() => { btn.disabled = false; });

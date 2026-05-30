@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Favorite;
+use App\Models\Favorit;
 
 class Mobil extends Model
 {
@@ -28,9 +28,9 @@ class Mobil extends Model
     }
 
     // Relasi: user yang memfavoritkan mobil ini
-    public function favorites()
+    public function favorits()
     {
-        return $this->hasMany(Favorite::class);
+        return $this->hasMany(Favorit::class);
     }
 
     // Helper: cek apakah mobil tersedia

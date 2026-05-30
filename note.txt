@@ -12,6 +12,7 @@ git remote add origin https://github.com/Rifaldi26/rentalMobil.app
 
 #turn on server
 php artisan serve
+php artisan reverb:start
 npm run dev
 
 ///

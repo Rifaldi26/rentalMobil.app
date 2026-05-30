@@ -5,6 +5,8 @@ use App\Http\Controllers\MobilController;
 use App\Http\Controllers\PemesananController;
 use App\Http\Controllers\FavoritController;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Controllers\ChatController;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,7 +40,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Halaman pemesanan milik pelanggan yang login
     Route::get('/pemesanan',  [PemesananController::class, 'userIndex'])->name('user.pemesanan.index');
     // Halaman chat pelanggan dengan admin
-    Route::get('/chat',       fn() => view('users.chat'))->name('user.chat');
+    Route::get('/chat', [ChatController::class, 'userIndex'])
+    ->name('user.chat');
     // Halaman profil pelanggan — statistik & menu akun
     Route::get('/profil',     fn() => view('users.profil'))->name('user.profil');
     // Halaman wishlist / mobil yang difavoritkan pelanggan
@@ -106,7 +109,8 @@ Route::middleware(['auth', 'verified', IsAdmin::class])
 
     // ── Chat Admin ────────────────────────────────────────────────────
     // Daftar percakapan admin dengan pelanggan
-    Route::get('chat',   fn() => view('admin.chat'))->name('chat');
+    Route::get('chat', [ChatController::class, 'adminIndex'])
+    ->name('chat');
 
     // ── Profil Admin ──────────────────────────────────────────────────
     // Halaman profil admin — statistik & menu kelola
@@ -115,6 +119,24 @@ Route::middleware(['auth', 'verified', IsAdmin::class])
     // ── Data Pelanggan ────────────────────────────────────────────────
     // Daftar semua akun pelanggan (controller dibuat setelah UserController selesai)
     Route::get('user',   fn() => view('admin.user.index'))->name('user.index');
+});
+
+Route::middleware('auth')->group(function () {
+
+    Broadcast::routes();
+    
+    Route::get('/chat/{lawan}/pesan',
+        [ChatController::class, 'riwayat'])
+        ->name('chat.riwayat');
+
+    Route::post('/chat/{lawan}/kirim',
+        [ChatController::class, 'kirim'])
+        ->name('chat.kirim');
+
+    Route::get('/chat/unread',
+        [ChatController::class, 'unread'])
+        ->name('chat.unread');
+
 });
 
 require __DIR__.'/auth.php';
