@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Favorite;
 
 class User extends Authenticatable
 {
@@ -55,9 +56,15 @@ class User extends Authenticatable
         return $this->hasMany(Pemesanan::class);
     }
 
-    // Relasi: satu user punya banyak faforit
+    // Relasi: mobil yang difavoritkan user ini
     public function favorits()
     {
         return $this->hasMany(Favorit::class);
+    }
+ 
+    // Helper: cek apakah user ini sudah memfavoritkan mobil tertentu
+    public function hasFavorited(int $mobilId): bool
+    {
+        return $this->favorits()->where('mobil_id', $mobilId)->exists();
     }
 }

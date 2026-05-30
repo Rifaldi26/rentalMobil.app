@@ -25,3 +25,7 @@ git clone https://github.com/Rifaldi26/rentalMobil.app.git
 composer install
 npm install
 copy .env.example .env
+
+# Ganti lokasi rental di bagian dashboard users
+var RENTAL_LAT = -6.2088;   // ← ganti dengan latitude kantor
+var RENTAL_LNG = 106.8456;  // ← ganti dengan longitude kantor

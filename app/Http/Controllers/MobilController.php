@@ -132,6 +132,11 @@ class MobilController extends Controller
      */
     public function show(Mobil $mobil)
     {
-        return view('users.mobil.show', compact('mobil'));
+        // Cek apakah user yang login sudah memfavoritkan mobil ini
+        $isFav = auth()->check()
+            ? auth()->user()->hasFavorited($mobil->id)
+            : false;
+ 
+        return view('users.mobil.show', compact('mobil', 'isFav'));
     }
 }
