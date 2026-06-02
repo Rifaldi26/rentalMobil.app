@@ -105,14 +105,25 @@ class MobilController extends Controller
      */
     public function destroy(Mobil $mobil)
     {
+        // ── Guard: cegah hapus jika ada pesanan aktif ──────────────────
+        $pesananAktif = $mobil->pemesanans()
+            ->whereIn('status', ['pending', 'dikonfirmasi', 'menunggu_pembayaran'])
+            ->count();
+ 
+        if ($pesananAktif > 0) {
+            return redirect()->route('admin.mobil.index')
+                ->with('error', "❌ {$mobil->nama} tidak dapat dihapus karena masih memiliki {$pesananAktif} pesanan aktif.");
+        }
+ 
+        // Hapus foto dari storage terlebih dahulu
         if ($mobil->foto) {
             Storage::disk('public')->delete($mobil->foto);
         }
-
+ 
         $mobil->delete();
-
+ 
         return redirect()->route('admin.mobil.index')
-            ->with('success', 'Mobil berhasil dihapus!');
+            ->with('success', "Mobil {$mobil->nama} berhasil dihapus.");
     }
 
     /**

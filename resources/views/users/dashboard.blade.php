@@ -227,8 +227,6 @@
 
     {{-- Filter pills --}}
     <div class="filter-bar">
-
-        {{-- Lokasi --}}
         <button class="filter-pill" id="pill-lokasi" onclick="openSheet('lokasi')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
@@ -236,8 +234,6 @@
             <span id="pill-lokasi-label">Lokasi Saya</span>
             <span class="dot"></span>
         </button>
-
-        {{-- Harga --}}
         <button class="filter-pill" id="pill-harga" onclick="openSheet('harga')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="12" y1="1" x2="12" y2="23"/>
@@ -246,8 +242,6 @@
             <span id="pill-harga-label">Harga</span>
             <span class="dot"></span>
         </button>
-
-        {{-- Merek --}}
         <button class="filter-pill" id="pill-merek" onclick="openSheet('merek')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <rect x="2" y="7" width="20" height="14" rx="2"/>
@@ -256,8 +250,6 @@
             <span id="pill-merek-label">Merek</span>
             <span class="dot"></span>
         </button>
-
-        {{-- Urutkan --}}
         <button class="filter-pill" id="pill-sort" onclick="openSheet('sort')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="3" y1="6" x2="21" y2="6"/>
@@ -314,14 +306,12 @@
             ->withCount(['pemesanans as total_selesai' => fn($q) => $q->where('status', 'selesai')])
             ->latest()->get();
 
-        $favoritIds = Auth::user()->favorits()->pluck('mobil_id')->toArray();
-        $maxHarga   = (int) ($semuaMobil->max('harga_per_hari') ?: 1000000);
+        $favoritIds  = Auth::user()->favorits()->pluck('mobil_id')->toArray();
+        $maxHarga    = (int) ($semuaMobil->max('harga_per_hari') ?: 1000000);
 
-        // Daftar merek unik dari DB
-        $merekList  = \App\Models\Mobil::where('status', 'tersedia')
+        $merekList   = \App\Models\Mobil::where('status', 'tersedia')
             ->distinct()->orderBy('merek')->pluck('merek');
 
-        // ID mobil terlaris (top 3 berdasarkan total pemesanan selesai)
         $terlarisIds = $semuaMobil->sortByDesc('total_selesai')
             ->filter(fn($m) => $m->total_selesai > 0)
             ->take(3)->pluck('id')->toArray();
@@ -360,9 +350,17 @@
                             <span class="car-badge">{{ $mobil->merek }}</span>
                         @endif
 
+                        {{-- Wishlist: SVG heart, state dari DB via $favoritIds --}}
                         <button class="car-wishlist"
-                            onclick="event.stopPropagation();toggleFavorit(event,this,{{ $mobil->id }})">
-                            {{ in_array($mobil->id, $favoritIds) ? '❤️' : '🤍' }}
+                                onclick="event.stopPropagation();toggleFavorit(this,{{ $mobil->id }})"
+                                data-fav="{{ in_array($mobil->id, $favoritIds) ? 'true' : 'false' }}"
+                                data-id="{{ $mobil->id }}">
+                            <svg width="18" height="18" viewBox="0 0 24 24"
+                                 fill="{{ in_array($mobil->id, $favoritIds) ? '#fca5a5' : 'none' }}"
+                                 stroke="{{ in_array($mobil->id, $favoritIds) ? '#dc2626' : 'var(--gray-700)' }}"
+                                 stroke-width="2.2" stroke-linecap="round">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
                         </button>
                     </div>
 
@@ -419,19 +417,13 @@
     <div style="font-size:13px;color:var(--gray-500);margin-bottom:20px;">
         Deteksi posisi kamu dan buka lokasi rental terdekat di Google Maps
     </div>
-
-    {{-- State: detecting --}}
     <div id="lokasi-detecting" class="lokasi-detecting" style="display:none;">
         <div style="font-size:28px;margin-bottom:8px;">🔍</div>
         <div>Mendeteksi lokasi kamu...</div>
     </div>
-
-    {{-- State: error --}}
     <div id="lokasi-error" class="lokasi-error">
         ⚠️ Tidak dapat mendeteksi lokasi. Pastikan izin lokasi diaktifkan di browser kamu.
     </div>
-
-    {{-- State: result --}}
     <div id="lokasi-result" style="display:none;">
         <div class="lokasi-card">
             <div class="lokasi-card-icon">
@@ -446,12 +438,8 @@
                 <div class="lokasi-card-sub" id="lokasi-koordinat"></div>
             </div>
         </div>
-
-        {{-- Tombol buka Google Maps ke lokasi rental --}}
         <div style="margin-bottom:16px;">
             <div class="filter-section-title" style="margin-bottom:10px;">Rental Terdekat</div>
-
-
             <a id="maps-btn-2" href="#" target="_blank" rel="noopener" class="btn-maps">
                 <div class="btn-maps-icon" style="background:#e3f2fd;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2.5">
@@ -469,23 +457,14 @@
             </a>
         </div>
     </div>
-
-    {{-- Default state (belum klik deteksi) --}}
     <div id="lokasi-default">
         <div style="text-align:center;padding:16px 0 24px;">
             <div style="font-size:48px;margin-bottom:12px;">📍</div>
-            <div style="font-size:14px;font-weight:600;color:var(--gray-700);margin-bottom:6px;">
-                Izinkan akses lokasi
-            </div>
-            <div style="font-size:13px;color:var(--gray-500);">
-                Tap tombol di bawah untuk mendeteksi posisi kamu dan menemukan rental terdekat
-            </div>
+            <div style="font-size:14px;font-weight:600;color:var(--gray-700);margin-bottom:6px;">Izinkan akses lokasi</div>
+            <div style="font-size:13px;color:var(--gray-500);">Tap tombol di bawah untuk mendeteksi posisi kamu dan menemukan rental terdekat</div>
         </div>
     </div>
-
-    <button class="btn-apply-filter" id="btn-detect-lokasi" onclick="detectLokasi()">
-        📍 Deteksi Lokasi Saya
-    </button>
+    <button class="btn-apply-filter" id="btn-detect-lokasi" onclick="detectLokasi()">📍 Deteksi Lokasi Saya</button>
     <button class="btn-reset-filter" onclick="closeSheet()">Tutup</button>
 </div>
 
@@ -554,15 +533,15 @@ var toastTimer;
 
 /* ── STATE ──────────────────────────────────────────── */
 var state = {
-    search  : '',
-    hargaMin: 0,
-    hargaMax: {{ $maxHarga }},
-    merek   : '',
-    sort    : 'default',
+    search   : '',
+    hargaMin : 0,
+    hargaMax : {{ $maxHarga }},
+    merek    : '',
+    sort     : 'default',
     _hargaMin: 0,
     _hargaMax: {{ $maxHarga }},
-    _merek  : '',
-    _sort   : 'default',
+    _merek   : '',
+    _sort    : 'default',
 };
 
 /* ── SHEET OPEN / CLOSE ─────────────────────────────── */
@@ -573,14 +552,11 @@ function openSheet(name) {
     state._hargaMax = state.hargaMax;
     state._merek    = state.merek;
     state._sort     = state.sort;
-
     if (currentSheet) { closeSheet(true); }
     currentSheet = name;
-
     if (name === 'harga') syncHargaUI();
     if (name === 'merek') syncMerekUI();
     if (name === 'sort')  syncSortUI();
-
     document.getElementById('filter-overlay').classList.add('open');
     document.getElementById('sheet-' + name).classList.add('open');
 }
@@ -599,8 +575,7 @@ function applySheet(name) {
         var changed = state.hargaMin > 0 || state.hargaMax < {{ $maxHarga }};
         document.getElementById('pill-harga').classList.toggle('active', changed);
         document.getElementById('pill-harga-label').textContent = changed
-            ? fmtRibuan(state.hargaMin) + '–' + fmtRibuan(state.hargaMax)
-            : 'Harga';
+            ? fmtRibuan(state.hargaMin) + '–' + fmtRibuan(state.hargaMax) : 'Harga';
     }
     if (name === 'merek') {
         state.merek = state._merek;
@@ -624,7 +599,7 @@ function resetSheet(name) {
     if (name === 'merek') { state._merek = ''; syncMerekUI(); }
 }
 
-/* ── HARGA UI ───────────────────────────────────────── */
+/* ── HARGA SLIDER ───────────────────────────────────── */
 function syncHargaUI() {
     document.getElementById('range-min').value = state._hargaMin;
     document.getElementById('range-max').value = state._hargaMax;
@@ -650,79 +625,61 @@ function updateSlider() {
     document.getElementById('label-max').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(maxVal);
 }
 
-/* ── MEREK UI ───────────────────────────────────────── */
+/* ── MEREK ──────────────────────────────────────────── */
 function syncMerekUI() {
     document.querySelectorAll('.merek-chip').forEach(function(c) {
         c.classList.toggle('active', c.dataset.merek === state._merek);
     });
 }
-function selectMerek(el) {
-    state._merek = el.dataset.merek;
-    syncMerekUI();
-}
+function selectMerek(el) { state._merek = el.dataset.merek; syncMerekUI(); }
 
-/* ── SORT UI ────────────────────────────────────────── */
+/* ── SORT ───────────────────────────────────────────── */
 function syncSortUI() {
     document.querySelectorAll('#sort-options button').forEach(function(b) {
         b.classList.toggle('active', b.dataset.sort === state._sort);
     });
 }
-function selectSort(el) {
-    state._sort = el.dataset.sort;
-    syncSortUI();
-}
+function selectSort(el) { state._sort = el.dataset.sort; syncSortUI(); }
 
-/* ── LOKASI + MAPS ──────────────────────────────────── */
-// Koordinat kantor rental — ganti sesuai lokasi asli
-var RENTAL_LAT = -6.2088;
-var RENTAL_LNG = 106.8456;
-var RENTAL_NAMA = encodeURIComponent('Rental Mobil');
+/* ── LOKASI ─────────────────────────────────────────── */
+var RENTAL_LAT  = -6.2088;
+var RENTAL_LNG  = 106.8456;
 
 function detectLokasi() {
     if (!navigator.geolocation) {
-        document.getElementById('lokasi-error').style.display = 'block';
-        return;
+        document.getElementById('lokasi-error').style.display = 'block'; return;
     }
-    document.getElementById('lokasi-default').style.display    = 'none';
-    document.getElementById('lokasi-detecting').style.display  = 'block';
-    document.getElementById('lokasi-error').style.display      = 'none';
-    document.getElementById('btn-detect-lokasi').disabled      = true;
-    document.getElementById('btn-detect-lokasi').textContent   = 'Mendeteksi...';
+    document.getElementById('lokasi-default').style.display   = 'none';
+    document.getElementById('lokasi-detecting').style.display = 'block';
+    document.getElementById('lokasi-error').style.display     = 'none';
+    document.getElementById('btn-detect-lokasi').disabled     = true;
+    document.getElementById('btn-detect-lokasi').textContent  = 'Mendeteksi...';
 
     navigator.geolocation.getCurrentPosition(
         function(pos) {
             var lat = pos.coords.latitude.toFixed(6);
             var lng = pos.coords.longitude.toFixed(6);
-
             document.getElementById('lokasi-detecting').style.display = 'none';
             document.getElementById('lokasi-result').style.display    = 'block';
             document.getElementById('lokasi-koordinat').textContent   = lat + ', ' + lng;
-
-            // Reverse geocode via nominatim (gratis, tanpa API key)
             fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json')
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
-                    var addr = d.address || {};
-                    var label = addr.neighbourhood || addr.suburb || addr.city_district
-                        || addr.city || addr.county || 'Lokasi ditemukan';
-                    document.getElementById('lokasi-alamat').textContent = label + ', ' + (addr.city || addr.county || '');
+                    var a = d.address || {};
+                    var label = a.neighbourhood || a.suburb || a.city_district || a.city || a.county || 'Lokasi ditemukan';
+                    document.getElementById('lokasi-alamat').textContent = label + ', ' + (a.city || a.county || '');
                 })
                 .catch(function() {
                     document.getElementById('lokasi-alamat').textContent = 'Koordinat: ' + lat + ', ' + lng;
                 });
-
-            // URL 2 — arah dari posisi user ke koordinat kantor rental
-            var dirUrl = 'https://www.google.com/maps/dir/' + lat + ',' + lng + '/' + RENTAL_LAT + ',' + RENTAL_LNG;
-            document.getElementById('maps-btn-2').href = dirUrl;
-
+            document.getElementById('maps-btn-2').href =
+                'https://www.google.com/maps/dir/' + lat + ',' + lng + '/' + RENTAL_LAT + ',' + RENTAL_LNG;
             document.getElementById('btn-detect-lokasi').textContent = '📍 Deteksi Ulang';
             document.getElementById('btn-detect-lokasi').disabled    = false;
-
-            // Tandai pill lokasi aktif
             document.getElementById('pill-lokasi').classList.add('active');
             document.getElementById('pill-lokasi-label').textContent = 'Lokasi Saya';
         },
-        function(err) {
+        function() {
             document.getElementById('lokasi-detecting').style.display = 'none';
             document.getElementById('lokasi-default').style.display   = 'block';
             document.getElementById('lokasi-error').style.display     = 'block';
@@ -733,28 +690,19 @@ function detectLokasi() {
     );
 }
 
-/* ── APPLY FILTERS (main) ───────────────────────────── */
+/* ── APPLY FILTERS ──────────────────────────────────── */
 function applyFilters() {
     state.search = document.getElementById('search-input').value.toLowerCase().trim();
-
     var cards   = Array.from(document.querySelectorAll('#cars-grid .car-card'));
     var visible = [];
-
     cards.forEach(function(card) {
-        var nama  = card.dataset.nama  || '';
-        var merek = card.dataset.merek || '';
-        var harga = parseInt(card.dataset.harga) || 0;
-
-        var matchSearch = !state.search || nama.includes(state.search) || merek.includes(state.search);
-        var matchHarga  = harga >= state.hargaMin && harga <= state.hargaMax;
-        var matchMerek  = !state.merek || merek === state.merek;
-
+        var matchSearch = !state.search || card.dataset.nama.includes(state.search) || card.dataset.merek.includes(state.search);
+        var matchHarga  = parseInt(card.dataset.harga) >= state.hargaMin && parseInt(card.dataset.harga) <= state.hargaMax;
+        var matchMerek  = !state.merek || card.dataset.merek === state.merek;
         var show = matchSearch && matchHarga && matchMerek;
         card.style.display = show ? '' : 'none';
         if (show) visible.push(card);
     });
-
-    // Sort
     if (state.sort !== 'default' && visible.length > 1) {
         var parent = document.getElementById('cars-grid');
         visible.sort(function(a, b) {
@@ -765,7 +713,6 @@ function applyFilters() {
         });
         visible.forEach(function(c) { parent.appendChild(c); });
     }
-
     document.getElementById('result-count').textContent = visible.length;
     document.getElementById('no-result').style.display  = visible.length === 0 ? 'block' : 'none';
 }
@@ -783,50 +730,63 @@ function resetFilters() {
     applyFilters();
 }
 
-/* ── FAVORIT ────────────────────────────────────────── */
-function toggleFavorit(e, btn, mobilId) {
-    e.stopPropagation(); // Mencegah masuk ke halaman detail saat klik love
-    btn.disabled = true; // Mencegah klik dua kali beruntun
+/* ── FAVORIT (SVG, sessionStorage) ─────────────────── */
+function getFavKey(id) { return 'fav_' + id; }
 
-    // Optimistic UI: Ubah warna secara instan
-    var isFav = btn.textContent.trim() === '❤️';
+function applyFavState(btn, isFav) {
+    var svg = btn.querySelector('svg');
+    if (!svg) return;
+    svg.setAttribute('fill',   isFav ? '#fca5a5' : 'none');
+    svg.setAttribute('stroke', isFav ? '#dc2626' : 'var(--gray-700)');
+    btn.dataset.fav = isFav ? 'true' : 'false';
+    btn.classList.toggle('wishlisted', isFav);
+}
+
+// Sinkron icon dari sessionStorage saat halaman dimuat
+// (mencegah delay setelah back dari halaman detail)
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.car-wishlist[data-id]').forEach(function(btn) {
+        var cached = sessionStorage.getItem(getFavKey(btn.dataset.id));
+        if (cached !== null) applyFavState(btn, cached === 'true');
+    });
+});
+
+function toggleFavorit(btn, mobilId) {
+    var isFav   = btn.dataset.fav === 'true';
     var willFav = !isFav;
-    btn.textContent = willFav ? '❤️' : '🤍';
 
-    // Kirim request ke server tanpa reload
+    // Optimistic UI
+    applyFavState(btn, willFav);
+    sessionStorage.setItem(getFavKey(mobilId), willFav ? 'true' : 'false');
+    btn.disabled = true;
+
     fetch('/favorit/' + mobilId + '/toggle', {
-        method: 'POST',
+        method : 'POST',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',         // <--- INI KUNCI UTAMANYA
-            'X-Requested-With': 'XMLHttpRequest'        // <--- INI KUNCI UTAMANYA
+            'X-CSRF-TOKEN'    : document.querySelector('meta[name="csrf-token"]').content,
+            'Accept'          : 'application/json',
+            'Content-Type'    : 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
         }
     })
-    .then(function(r) { 
-        if (!r.ok) throw new Error('Network error');
-        return r.json(); 
-    })
-    .then(function(d) { 
-        // Pastikan ikon sinkron dengan database
-        btn.textContent = d.favorited ? '❤️' : '🤍';
-        showToast(d.message); 
+    .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+    .then(function(d) {
+        applyFavState(btn, d.favorited);
+        sessionStorage.setItem(getFavKey(mobilId), d.favorited ? 'true' : 'false');
+        showToast(d.favorited ? '❤️ Ditambahkan ke favorit' : '🤍 Dihapus dari favorit');
     })
     .catch(function() {
-        // Kembalikan ikon jika terjadi error koneksi
-        btn.textContent = isFav ? '❤️' : '🤍';
-        showToast('Gagal update favorit', 'error');
+        applyFavState(btn, isFav);
+        sessionStorage.setItem(getFavKey(mobilId), isFav ? 'true' : 'false');
+        showToast('⚠️ Gagal update favorit', 'error');
     })
-    .finally(function() {
-        btn.disabled = false;
-    });
+    .finally(function() { btn.disabled = false; });
 }
 
 /* ── HELPERS ────────────────────────────────────────── */
 function capitalise(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-function fmtRibuan(n) {
-    return 'Rp' + Math.round(n / 1000) + 'rb';
-}
+function fmtRibuan(n)  { return 'Rp' + Math.round(n / 1000) + 'rb'; }
+
 function showToast(msg, type) {
     var t = document.getElementById('toast');
     t.textContent = msg;
