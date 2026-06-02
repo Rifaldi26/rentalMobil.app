@@ -358,6 +358,33 @@
             75%  { opacity: 1; }
             100% { opacity: 0; }
         }
+        /* ── CSS Tambahan: Guest Switch Page ── */
+        .guest-switch-page {
+            display: none; position: fixed; inset: 0; background: #fff; z-index: 9999;
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; text-align: center;
+        }
+        .guest-switch-page.active { display: flex; }
+        .guest-icon { font-size: 64px; margin-bottom: 24px; }
+        .guest-title { font-size: 20px; font-weight: 800; color: var(--gray-900); margin-bottom: 8px; }
+        .guest-desc { font-size: 14px; color: var(--gray-500); margin-bottom: 32px; max-width: 280px; line-height: 1.5; }
+        
+        .btn-guest-login {
+            display: flex; align-items: center; justify-content: center;
+            width: 100%; max-width: 300px; padding: 14px; background: var(--brand-400);
+            color: #fff; border-radius: var(--radius-md); font-family: var(--font);
+            font-size: 15px; font-weight: 700; text-decoration: none; margin-bottom: 12px;
+            transition: background .15s;
+        }
+        .btn-guest-login:active { background: var(--brand-600); }
+        
+        .btn-guest-home {
+            width: 100%; max-width: 300px; padding: 14px; background: #fff;
+            color: var(--gray-700); border: 1.5px solid var(--gray-200); border-radius: var(--radius-md);
+            font-family: var(--font); font-size: 15px; font-weight: 700; cursor: pointer;
+            transition: background .15s;
+        }
+        .btn-guest-home:active { background: var(--gray-100); }
     </style>
 </head>
 <body>
@@ -758,6 +785,16 @@
     @endif
 </div>
 
+{{-- ══ GUEST SWITCH PAGE ══════════════════════════════════════════ --}}
+<div id="guest-switch-page" class="guest-switch-page">
+    <div class="guest-icon">🔒</div>
+    <h2 class="guest-title">Halaman Tidak Tersedia</h2>
+    <p class="guest-desc">Masuk untuk melanjutkan atau kembali ke beranda</p>
+    
+    <a href="{{ route('login') }}" class="btn-guest-login">Login</a>
+    <button class="btn-guest-home" onclick="closeGuestPage()">Kembali</button>
+</div>
+
 @include('users.partials.bottom-nav')
 
 <script>
@@ -891,6 +928,85 @@ function shareHalaman() {
             .then(() => showToast('🔗 Link disalin!'))
             .catch(() => showToast('Salin URL dari address bar'));
     }
+}
+// 1. Cek status login dari Blade
+var isLoggedIn = {{ Auth::check() ? 'true' : 'false' }};
+
+// 2. Fungsi penahan Guest (Pastikan HTML Switch Page sudah ada di file ini)
+function showGuestPage() {
+    var guestPage = document.getElementById('guest-switch-page');
+    if (guestPage) {
+        guestPage.classList.add('active');
+    }
+}
+
+function closeGuestPage() {
+    var guestPage = document.getElementById('guest-switch-page');
+    if (guestPage) {
+        guestPage.classList.remove('active');
+    }
+}
+
+// 3. Fungsi Utama Tombol Favorit
+function toggleWishlist(btn) {
+    // Tahan aksi jika pengunjung belum login
+    if (!isLoggedIn) {
+        showGuestPage();
+        return;
+    }
+
+    var url = btn.dataset.url;
+    var isFav = btn.dataset.fav === 'true';
+    var willFav = !isFav;
+    var svg = btn.querySelector('#heart-icon');
+
+    // Optimistic UI (Ubah tampilan sebelum server membalas biar terasa cepat)
+    svg.setAttribute('fill', willFav ? '#fca5a5' : 'none');
+    svg.setAttribute('stroke', willFav ? '#dc2626' : 'var(--gray-700)');
+    btn.dataset.fav = willFav ? 'true' : 'false';
+    btn.classList.toggle('wishlisted', willFav);
+    btn.disabled = true;
+
+    // Kirim request ke server
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+    .then(function(d) {
+        // Sinkronkan data jika sukses
+        svg.setAttribute('fill', d.favorited ? '#fca5a5' : 'none');
+        svg.setAttribute('stroke', d.favorited ? '#dc2626' : 'var(--gray-700)');
+        btn.dataset.fav = d.favorited ? 'true' : 'false';
+        btn.classList.toggle('wishlisted', d.favorited);
+        btn.setAttribute('title', d.favorited ? 'Hapus dari Favorit' : 'Tambah ke Favorit');
+        
+        // Opsional: Tampilkan notifikasi (Jika ada fungsi showToast)
+        if (typeof showToast === 'function') {
+            showToast(d.favorited ? '❤️ Ditambahkan ke favorit' : '🤍 Dihapus dari favorit');
+        }
+    })
+    .catch(function() {
+        // Kembalikan ke state awal jika request gagal
+        svg.setAttribute('fill', isFav ? '#fca5a5' : 'none');
+        svg.setAttribute('stroke', isFav ? '#dc2626' : 'var(--gray-700)');
+        btn.dataset.fav = isFav ? 'true' : 'false';
+        btn.classList.toggle('wishlisted', isFav);
+        
+        if (typeof showToast === 'function') {
+            showToast('⚠️ Gagal update favorit', 'error');
+        } else {
+            alert('Gagal update favorit');
+        }
+    })
+    .finally(function() {
+        btn.disabled = false;
+    });
 }
 </script>
 

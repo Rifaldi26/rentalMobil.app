@@ -794,9 +794,6 @@ function showToast(msg, type) {
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3000);
 }
-function confirmLogout() {
-    document.getElementById('modal-logout').style.display = 'flex';
-}
 
 // Init
 updateSlider();

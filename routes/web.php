@@ -15,128 +15,97 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// ─── Halaman Landing ─────────────────────────────────────────────────────
-// Menampilkan halaman selamat datang
+// ─── Halaman Utama ─────────────────────────────────────────────────────
 Route::get('/', function () {
     return view('welcome');
 });
 
-// ─── Dashboard ───────────────────────────────────────────────────────────
-// Redirect otomatis setelah login berdasarkan role:
-// Admin     → /admin/dashboard
-// Pelanggan → view users.dashboard
+// ─── Gateaway Dashboard ───────────────────────────────────────────────────────────
+// Mengarahkan pengguna ke dashboard yang sesuai berdasarkan role
 Route::get('/dashboard', function () {
     if (auth()->user()->role === 'admin') {
         return redirect()->route('admin.dashboard');
-    }
-    return view('users.dashboard');
+    } return view('users.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// ─── Route Pelanggan ─────────────────────────────────────────────────────
-// Membutuhkan login + email terverifikasi
+/*
+|--------------------------------------------------------------------------
+| Area Pelanggan (User)
+|--------------------------------------------------------------------------
+*/
+Route::get('/mobil/{mobil}', [MobilController::class, 'show'])->name('user.mobil.show');
+
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // ── Halaman User ──────────────────────────────────────────────────
-    // Halaman pemesanan milik pelanggan yang login
+    // -- Navigasi Utama Pelanggan --
     Route::get('/pemesanan',  [PemesananController::class, 'userIndex'])->name('user.pemesanan.index');
-    // Halaman chat pelanggan dengan admin
-    Route::get('/chat', [ChatController::class, 'userIndex'])
-    ->name('user.chat');
-    // Halaman profil pelanggan — statistik & menu akun
-    Route::get('/profil',     fn() => view('users.profil'))->name('user.profil');
-    // Halaman wishlist / mobil yang difavoritkan pelanggan
     Route::get('/favorit', [FavoritController::class, 'index'])->name('user.favorit');
-    // Halaman detail mobil untuk pelanggan
-    Route::get('/mobil/{mobil}', [MobilController::class, 'show'])->name('user.mobil.show');
-
-    // ── Favorit ───────────────────────────────────────────────────────
-    // Toggle tambah/hapus mobil dari daftar favorit pelanggan
+    Route::get('/chat', [ChatController::class, 'userIndex'])->name('user.chat');
+    Route::get('/profil',     fn() => view('users.profil'))->name('user.profil');
+    
+    // -- Interaksi Favorit --
     Route::post('/favorit/{mobil}/toggle', [FavoritController::class, 'toggle'])->name('user.favorit.toggle');
-
-    // ── Profil (Edit) ─────────────────────────────────────────────────
-    // Menampilkan form edit data profil pelanggan
+    
+    // -- Manajemen Profil Akun --
     Route::get('/profile',    [ProfileController::class, 'edit'])->name('profile.edit');
-    // Menyimpan perubahan data profil (nama, email, no_hp)
     Route::patch('/profile',  [ProfileController::class, 'update'])->name('profile.update');
-    // Menghapus akun pelanggan secara permanen
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // ── Pemesanan ─────────────────────────────────────────────────────
-    // PENTING: route /pemesanan/create harus didefinisikan SEBELUM /pemesanan/{id}
-    // agar Laravel tidak menganggap 'create' sebagai parameter {pemesanan}
-
-    // Menampilkan form buat pemesanan baru (butuh ?mobil_id=X di query string)
+    
+    // -- Manajemen Pemesanan --
     Route::get('/pemesanan/create',              [PemesananController::class, 'create'])->name('pemesanan.create');
-    // Menyimpan pemesanan baru — cek konflik tanggal & hitung total harga otomatis
     Route::post('/pemesanan',                    [PemesananController::class, 'store'])->name('pemesanan.store');
-    // Membatalkan pemesanan oleh pelanggan (hanya jika status masih pending)
     Route::patch('/pemesanan/{pemesanan}/cancel',[PemesananController::class, 'cancel'])->name('pemesanan.cancel');
-});
-
-// ─── Route Admin ─────────────────────────────────────────────────────────
-// Membutuhkan login + email terverifikasi + role admin
-// Prefix URL: /admin/... | Prefix name: admin....
-Route::middleware(['auth', 'verified', IsAdmin::class])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-
-    // ── Dashboard ─────────────────────────────────────────────────────
-    // Halaman utama admin — statistik, konfirmasi pemesanan, ringkasan bulan ini
+    });
+    
+/*
+|--------------------------------------------------------------------------
+| Area Administrator
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'verified', IsAdmin::class])->prefix('admin')->name('admin.')->group(function () {
+    
+    // -- Dashboard dan Profil Admin --
     Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
-
-    // ── CRUD Mobil ────────────────────────────────────────────────────
-    // Resource otomatis menghasilkan 7 route:
-    // GET    /admin/mobil            → index   (daftar + filter status)
-    // GET    /admin/mobil/create     → create  (form tambah)
-    // POST   /admin/mobil            → store   (simpan + upload foto)
-    // GET    /admin/mobil/{id}/edit  → edit    (form edit)
-    // PUT    /admin/mobil/{id}       → update  (simpan perubahan + ganti foto)
-    // DELETE /admin/mobil/{id}       → destroy (hapus + hapus foto dari storage)
-    Route::resource('mobil', MobilController::class);
-    // Toggle status mobil antara 'tersedia' ↔ 'disewa'
-    Route::patch('mobil/{mobil}/toggle', [MobilController::class, 'toggleStatus'])->name('mobil.toggle');
-
-    // ── Pemesanan Admin ───────────────────────────────────────────────
-    // Daftar semua pemesanan — support filter status & pencarian nama
-    Route::get('pemesanan',                                  [PemesananController::class, 'index'])->name('pemesanan.index');
-    // Konfirmasi pemesanan: status pending → dikonfirmasi, mobil → disewa
-    Route::patch('pemesanan/{pemesanan}/konfirmasi',         [PemesananController::class, 'konfirmasi'])->name('pemesanan.konfirmasi');
-    // Tolak pemesanan: status pending → dibatalkan
-    Route::patch('pemesanan/{pemesanan}/tolak',              [PemesananController::class, 'tolak'])->name('pemesanan.tolak');
-    // Selesaikan pemesanan: status dikonfirmasi → selesai, mobil → tersedia
-    Route::patch('pemesanan/{pemesanan}/selesai',            [PemesananController::class, 'selesai'])->name('pemesanan.selesai');
-
-    // ── Chat Admin ────────────────────────────────────────────────────
-    // Daftar percakapan admin dengan pelanggan
-    Route::get('chat', [ChatController::class, 'adminIndex'])
-    ->name('chat');
-
-    // ── Profil Admin ──────────────────────────────────────────────────
-    // Halaman profil admin — statistik & menu kelola
     Route::get('profil', fn() => view('admin.profil'))->name('profil');
-
-    // ── Data Pelanggan ────────────────────────────────────────────────
-    // Daftar semua akun pelanggan (controller dibuat setelah UserController selesai)
+    
+    // -- Manajemen Mobil --
+    // Menyediakan route index, create, store, edit, update, destroy
+    Route::resource('mobil', MobilController::class);
+    
+    // Mengubah status mobil (Tersedia <-> Disewa)
+    Route::patch('mobil/{mobil}/toggle', [MobilController::class, 'toggleStatus'])->name('mobil.toggle');
+    
+    // -- Manajemen Pemesanan --
+    Route::get('pemesanan', [PemesananController::class, 'index'])->name('pemesanan.index');
+    Route::patch('pemesanan/{pemesanan}/konfirmasi', [PemesananController::class, 'konfirmasi'])->name('pemesanan.konfirmasi');
+    Route::patch('pemesanan/{pemesanan}/tolak', [PemesananController::class, 'tolak'])->name('pemesanan.tolak');
+    Route::patch('pemesanan/{pemesanan}/selesai', [PemesananController::class, 'selesai'])->name('pemesanan.selesai');
+    
+    // -- Komunikasi & Data Pengguna --
+    Route::get('chat', [ChatController::class, 'adminIndex'])->name('chat');
     Route::get('user',   fn() => view('admin.user.index'))->name('user.index');
 });
 
+/*
+|--------------------------------------------------------------------------
+| Shared Routes: Chat System (Admin & Pelanggan)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
 
+    // Registrasi route untuk WebSockets (misal: Pusher)
     Broadcast::routes();
     
-    Route::get('/chat/{lawan}/pesan',
-        [ChatController::class, 'riwayat'])
-        ->name('chat.riwayat');
-
-    Route::post('/chat/{lawan}/kirim',
-        [ChatController::class, 'kirim'])
-        ->name('chat.kirim');
-
-    Route::get('/chat/unread',
-        [ChatController::class, 'unread'])
-        ->name('chat.unread');
-
+    // -- Endpoint Data Chat --
+    // PENTING: Route 'unread' diletakkan sebelum '{lawan}' agar kata 'unread' tidak dianggap sebagai parameter lawan
+    Route::get('/chat/unread', [ChatController::class, 'unread'])->name('chat.unread');
+    Route::get('/chat/{lawan}/pesan',[ChatController::class, 'riwayat'])->name('chat.riwayat');
+    Route::post('/chat/{lawan}/kirim',[ChatController::class, 'kirim'])->name('chat.kirim');
 });
 
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes
+|--------------------------------------------------------------------------
+*/
 require __DIR__.'/auth.php';

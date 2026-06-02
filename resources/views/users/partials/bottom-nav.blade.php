@@ -63,29 +63,6 @@
 {{-- Toast --}}
 <div class="toast" id="toast"></div>
 
-{{-- Logout Form --}}
-<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
-    @csrf
-</form>
-
-{{-- Confirm Logout Modal --}}
-<div id="modal-logout" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:flex-end;">
-    <div style="background:#fff;border-radius:24px 24px 0 0;padding:28px 24px;width:100%;">
-        <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Keluar dari akun?</div>
-        <div style="font-size:14px;color:var(--gray-500);margin-bottom:24px;">
-            Anda akan keluar dari akun <strong>{{ Auth::user()->name }}</strong>.
-        </div>
-        <button onclick="document.getElementById('logout-form').submit()"
-            style="width:100%;padding:14px;background:var(--danger);color:#fff;border:none;border-radius:var(--radius-md);font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;">
-            Ya, Keluar
-        </button>
-        <button onclick="document.getElementById('modal-logout').style.display='none'"
-            style="width:100%;padding:14px;background:var(--gray-100);color:var(--gray-700);border:none;border-radius:var(--radius-md);font-size:15px;font-weight:600;cursor:pointer;">
-            Batal
-        </button>
-    </div>
-</div>
-
 <script>
 if (typeof showToast === 'undefined') {
     var toastTimer;
@@ -95,11 +72,6 @@ if (typeof showToast === 'undefined') {
         t.className = `toast ${type} show`;
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
-    }
-}
-if (typeof confirmLogout === 'undefined') {
-    function confirmLogout() {
-        document.getElementById('modal-logout').style.display = 'flex';
     }
 }
 </script>
