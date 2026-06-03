@@ -229,8 +229,11 @@
     </div>
 </div>
 
-@include('admin.partials.bottom-nav')
-
+@if(Auth::user()->role === 'admin')
+    @include('admin.partials.bottom-nav')
+@else
+    @include('users.partials.bottom-nav')
+@endif
 <script>
 var chatLawanId  = null;
 var adminId      = {{ Auth::id() }};

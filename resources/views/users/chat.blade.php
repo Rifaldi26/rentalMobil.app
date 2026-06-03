@@ -143,8 +143,11 @@
     </div>
 @endif
 
-@include('users.partials.bottom-nav')
-
+@if(Auth::user()->role === 'admin')
+    @include('admin.partials.bottom-nav')
+@else
+    @include('users.partials.bottom-nav')
+@endif
 <script>
 var userId  = {{ Auth::id() }};
 var adminId = {{ $adminId ?? 'null' }};

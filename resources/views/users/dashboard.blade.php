@@ -526,8 +526,11 @@
     <button class="btn-apply-filter" onclick="applySheet('sort')">Terapkan</button>
 </div>
 
-@include('users.partials.bottom-nav')
-
+@if(Auth::user()->role === 'admin')
+    @include('admin.partials.bottom-nav')
+@else
+    @include('users.partials.bottom-nav')
+@endif
 <script>
 var toastTimer;
 

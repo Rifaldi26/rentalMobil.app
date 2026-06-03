@@ -117,8 +117,11 @@
 
 </div>
 
-@include('admin.partials.bottom-nav')
-
+@if(Auth::user()->role === 'admin')
+    @include('admin.partials.bottom-nav')
+@else
+    @include('users.partials.bottom-nav')
+@endif
 <script>
 function filterBooking(status, el) {
     document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));

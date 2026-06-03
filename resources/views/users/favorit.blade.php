@@ -155,8 +155,11 @@
 
 </div>
 
-@include('users.partials.bottom-nav')
-
+@if(Auth::user()->role === 'admin')
+    @include('admin.partials.bottom-nav')
+@else
+    @include('users.partials.bottom-nav')
+@endif
 <script>
 function hapusFavorit(mobilId, btn) {
     // Optimistic UI — langsung sembunyikan kartu

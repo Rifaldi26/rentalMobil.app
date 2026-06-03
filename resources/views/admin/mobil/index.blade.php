@@ -127,7 +127,10 @@
 </div>
 
 {{-- ═══ BOTTOM NAV — dari partial ════════════════════════ --}}
-@include('admin.partials.bottom-nav')
-
+@if(Auth::user()->role === 'admin')
+    @include('admin.partials.bottom-nav')
+@else
+    @include('users.partials.bottom-nav')
+@endif
 </body>
 </html>

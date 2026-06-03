@@ -115,8 +115,11 @@
     </div>
 </div>
 
-@include('users.partials.bottom-nav')
-
+@if(Auth::user()->role === 'admin')
+    @include('admin.partials.bottom-nav')
+@else
+    @include('users.partials.bottom-nav')
+@endif
 <script>
 function showToast(msg, type = '') {
     const t = document.getElementById('toast');
