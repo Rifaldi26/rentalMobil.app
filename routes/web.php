@@ -5,6 +5,7 @@ use App\Http\Controllers\MobilController;
 use App\Http\Controllers\PemesananController;
 use App\Http\Controllers\FavoritController;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
@@ -55,7 +56,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pemesanan/create',              [PemesananController::class, 'create'])->name('pemesanan.create');
     Route::post('/pemesanan',                    [PemesananController::class, 'store'])->name('pemesanan.store');
     Route::patch('/pemesanan/{pemesanan}/cancel',[PemesananController::class, 'cancel'])->name('pemesanan.cancel');
-    });
+
+    Route::get('/notifikasi',              [NotifikasiController::class, 'userIndex'])->name('user.notifikasi');
+    Route::get('/notifikasi/unread',       [NotifikasiController::class, 'unread'])->name('notifikasi.unread');
+    Route::post('/notifikasi/{notifikasi}/baca', [NotifikasiController::class, 'baca'])->name('notifikasi.baca');
+    Route::delete('/notifikasi/hapus-semua',    [NotifikasiController::class, 'hapusSemua'])->name('notifikasi.hapus');
+});
     
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +90,8 @@ Route::middleware(['auth', 'verified', IsAdmin::class])->prefix('admin')->name('
     // -- Komunikasi & Data Pengguna --
     Route::get('chat', [ChatController::class, 'adminIndex'])->name('chat');
     Route::get('user',   fn() => view('admin.user.index'))->name('user.index');
+
+    Route::get('/notifikasi', [NotifikasiController::class, 'adminIndex'])->name('notifikasi');
 });
 
 /*

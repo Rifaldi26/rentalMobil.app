@@ -194,13 +194,13 @@
 
 <nav class="nav">
     <div class="nav-brand">Rental<span>Mobil</span></div>
-    <button class="nav-icon" onclick="showToast('Tidak ada notifikasi baru')">
+    <a href="{{ route('user.notifikasi') }}" class="nav-icon" style="position:relative;text-decoration:none;color:inherit;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
             <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
         </svg>
-        <span class="badge"></span>
-    </button>
+        <span id="notif-badge" style="display:none;position:absolute;top:-3px;right:-3px;width:10px;height:10px;background:#ef4444;border-radius:50%;border:2px solid #fff;"></span>
+    </a>
 </nav>
 
 <div class="content" style="padding-bottom:100px;">
@@ -262,16 +262,6 @@
     </div>
 
     {{-- Alerts --}}
-    @if (session('success'))
-        <div style="margin:0 20px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--radius-md);padding:12px 14px;font-size:13px;font-weight:600;color:#16a34a;">
-            ✅ {{ session('success') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div style="margin:0 20px 12px;background:#fef2f2;border:1px solid #fecaca;border-radius:var(--radius-md);padding:12px 14px;font-size:13px;font-weight:600;color:#dc2626;">
-            ⚠️ {{ session('error') }}
-        </div>
-    @endif
 
     {{-- Pemesanan Aktif --}}
     @php
@@ -526,14 +516,9 @@
     <button class="btn-apply-filter" onclick="applySheet('sort')">Terapkan</button>
 </div>
 
-@if(Auth::user()->role === 'admin')
-    @include('admin.partials.bottom-nav')
-@else
-    @include('users.partials.bottom-nav')
-@endif
-<script>
-var toastTimer;
+@include('users.partials.bottom-nav')
 
+<script>
 /* ── STATE ──────────────────────────────────────────── */
 var state = {
     search   : '',
@@ -776,12 +761,12 @@ function toggleFavorit(btn, mobilId) {
     .then(function(d) {
         applyFavState(btn, d.favorited);
         sessionStorage.setItem(getFavKey(mobilId), d.favorited ? 'true' : 'false');
-        showToast(d.favorited ? '❤️ Ditambahkan ke favorit' : '🤍 Dihapus dari favorit');
+        // favorit updated
     })
     .catch(function() {
         applyFavState(btn, isFav);
         sessionStorage.setItem(getFavKey(mobilId), isFav ? 'true' : 'false');
-        showToast('⚠️ Gagal update favorit', 'error');
+        // gagal favorit
     })
     .finally(function() { btn.disabled = false; });
 }
@@ -790,17 +775,25 @@ function toggleFavorit(btn, mobilId) {
 function capitalise(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 function fmtRibuan(n)  { return 'Rp' + Math.round(n / 1000) + 'rb'; }
 
-function showToast(msg, type) {
-    var t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className   = 'toast ' + (type || '') + ' show';
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3000);
-}
 
 // Init
 updateSlider();
 </script>
 
+
+<script>
+(function pollNotifBadge() {
+    fetch('{{ route("notifikasi.unread") }}', {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        var badge = document.getElementById('notif-badge');
+        if (badge) badge.style.display = data.unread > 0 ? 'block' : 'none';
+    })
+    .catch(() => {});
+    setTimeout(pollNotifBadge, 30000);
+})();
+</script>
 </body>
 </html>

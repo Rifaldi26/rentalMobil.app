@@ -68,9 +68,6 @@
 
 </nav>
 
-{{-- Toast --}}
-<div class="toast" id="toast"></div>
-
 {{-- Logout Form --}}
 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
     @csrf
@@ -95,16 +92,6 @@
 </div>
 
 <script>
-if (typeof showToast === 'undefined') {
-    var toastTimer;
-    function showToast(msg, type = '') {
-        const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.className = `toast ${type} show`;
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
-    }
-}
 if (typeof confirmLogout === 'undefined') {
     function confirmLogout() {
         document.getElementById('modal-logout').style.display = 'flex';

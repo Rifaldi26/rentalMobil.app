@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Mobil;
 use App\Models\Pemesanan;
+use App\Models\Notifikasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,6 +19,9 @@ class PemesananController extends Controller
         return view('users.pemesanan.index');
     }
     
+    /**
+     * Form buat pemesanan baru
+     */
     public function create(Request $request)
     {
         $mobil = Mobil::findOrFail($request->mobil_id);
@@ -48,7 +52,7 @@ class PemesananController extends Controller
         $selesai = \Carbon\Carbon::parse($request->tanggal_selesai);
         $durasi  = $mulai->diffInDays($selesai);
 
-        // Cek konflik tanggal dengan pemesanan lain pada mobil yang sama
+        // Cek konflik
         $konflik = Pemesanan::where('mobil_id', $mobil->id)
             ->whereIn('status', ['pending', 'dikonfirmasi'])
             ->where(function ($q) use ($mulai, $selesai) {
@@ -76,6 +80,15 @@ class PemesananController extends Controller
             'catatan'        => $request->catatan,
             'status'         => 'pending',
         ]);
+
+        // Notifikasi ke user: pesanan berhasil dibuat
+        Notifikasi::kirim(
+            Auth::id(),
+            'Pemesanan Diterima',
+            "Pemesanan {$mobil->nama} ({$mulai->format('d M')} – {$selesai->format('d M Y')}) sedang menunggu konfirmasi admin.",
+            'info',
+            route('user.pemesanan.index')
+        );
 
         return redirect()->route('dashboard')
             ->with('success', 'Pemesanan berhasil dibuat! Menunggu konfirmasi admin.');
@@ -115,7 +128,6 @@ class PemesananController extends Controller
             $query->where('status', $request->status);
         }
 
-        // Filter bulan (format: 2025-01)
         if ($request->filled('bulan')) {
             [$tahun, $bulan] = explode('-', $request->bulan);
             $query->whereYear('created_at', $tahun)
@@ -144,6 +156,14 @@ class PemesananController extends Controller
         $pemesanan->update(['status' => 'dikonfirmasi']);
         $pemesanan->mobil->update(['status' => 'disewa']);
 
+        Notifikasi::kirim(
+            $pemesanan->user_id,
+            'Pemesanan Dikonfirmasi ✅',
+            "Pemesanan {$pemesanan->mobil->nama} ({$pemesanan->tanggal_mulai->format('d M')} – {$pemesanan->tanggal_selesai->format('d M Y')}) telah dikonfirmasi. Selamat menikmati perjalanan!",
+            'success',
+            route('user.pemesanan.index')
+        );
+
         return back()->with('success', "Pemesanan {$pemesanan->user->name} berhasil dikonfirmasi!");
     }
 
@@ -153,6 +173,14 @@ class PemesananController extends Controller
     public function tolak(Pemesanan $pemesanan)
     {
         $pemesanan->update(['status' => 'dibatalkan']);
+
+        Notifikasi::kirim(
+            $pemesanan->user_id,
+            'Pemesanan Ditolak',
+            "Maaf, pemesanan {$pemesanan->mobil->nama} ({$pemesanan->tanggal_mulai->format('d M')} – {$pemesanan->tanggal_selesai->format('d M Y')}) tidak dapat kami proses. Silakan hubungi kami via chat untuk informasi lebih lanjut.",
+            'warning',
+            route('user.pemesanan.index')
+        );
 
         return back()->with('success', "Pemesanan {$pemesanan->user->name} ditolak.");
     }
@@ -165,6 +193,14 @@ class PemesananController extends Controller
         $pemesanan->update(['status' => 'selesai']);
         $pemesanan->mobil->update(['status' => 'tersedia']);
 
+        Notifikasi::kirim(
+            $pemesanan->user_id,
+            'Pemesanan Selesai 🎉',
+            "Terima kasih telah menyewa {$pemesanan->mobil->nama}. Pemesanan Anda telah selesai. Sampai jumpa lagi!",
+            'success',
+            route('user.pemesanan.index')
+        );
+        
         return back()->with('success', "Pemesanan {$pemesanan->user->name} ditandai selesai!");
     }
 }

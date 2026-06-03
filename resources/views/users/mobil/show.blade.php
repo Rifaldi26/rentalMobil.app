@@ -900,7 +900,7 @@ function toggleWishlist(btn) {
         btn.title       = serverFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
         // Sinkronisasi ke sessionStorage dengan nilai server
         if (mobilId) sessionStorage.setItem('fav_' + mobilId, serverFav ? 'true' : 'false');
-        showToast(serverFav ? '❤️ Ditambahkan ke favorit' : '🤍 Dihapus dari favorit');
+        // favorit updated
     })
     .catch(() => {
         // Rollback
@@ -909,7 +909,7 @@ function toggleWishlist(btn) {
         icon.setAttribute('stroke', isFav ? '#dc2626' : 'var(--gray-700)');
         btn.dataset.fav = isFav ? 'true' : 'false';
         if (mobilId) sessionStorage.setItem('fav_' + mobilId, isFav ? 'true' : 'false');
-        showToast('⚠️ Gagal, coba lagi', 'error');
+        // gagal
     })
     .finally(() => { btn.disabled = false; });
 }
@@ -925,8 +925,8 @@ function shareHalaman() {
         navigator.share(data).catch(() => {});
     } else {
         navigator.clipboard.writeText(window.location.href)
-            .then(() => showToast('🔗 Link disalin!'))
-            .catch(() => showToast('Salin URL dari address bar'));
+            .then(() => {})
+            .catch(() => {});
     }
 }
 // 1. Cek status login dari Blade
@@ -986,9 +986,6 @@ function toggleWishlist(btn) {
         btn.classList.toggle('wishlisted', d.favorited);
         btn.setAttribute('title', d.favorited ? 'Hapus dari Favorit' : 'Tambah ke Favorit');
         
-        // Opsional: Tampilkan notifikasi (Jika ada fungsi showToast)
-        if (typeof showToast === 'function') {
-            showToast(d.favorited ? '❤️ Ditambahkan ke favorit' : '🤍 Dihapus dari favorit');
         }
     })
     .catch(function() {
@@ -998,8 +995,6 @@ function toggleWishlist(btn) {
         btn.dataset.fav = isFav ? 'true' : 'false';
         btn.classList.toggle('wishlisted', isFav);
         
-        if (typeof showToast === 'function') {
-            showToast('⚠️ Gagal update favorit', 'error');
         } else {
             alert('Gagal update favorit');
         }

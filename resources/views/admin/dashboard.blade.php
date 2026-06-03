@@ -10,16 +10,13 @@
 
 <nav class="nav">
     <div class="nav-brand">Rental<span>Mobil</span></div>
-    <button class="nav-icon" onclick="showToast('Tidak ada notifikasi baru')">
+    <a href="{{ route('admin.notifikasi') }}" class="nav-icon" style="position:relative;text-decoration:none;color:inherit;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
             <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
         </svg>
-        @php $pendingCount = \App\Models\Pemesanan::where('status','pending')->count(); @endphp
-        @if ($pendingCount > 0)
-            <span class="badge">{{ $pendingCount }}</span>
-        @endif
-    </button>
+        <span id="notif-badge" style="display:none;position:absolute;top:-3px;right:-3px;width:10px;height:10px;background:#ef4444;border-radius:50%;border:2px solid #fff;"></span>
+    </a>
 </nav>
 
 <div class="content" style="padding-bottom:100px;">
@@ -28,15 +25,6 @@
         <div class="hero-greeting">Halo, {{ Auth::user()->name }} 👋</div>
         <div class="hero-title">Selamat datang, <em>Admin!</em></div>
     </div>
-
-    @if (session('success'))
-        <div class="section" style="padding-bottom:0;margin-top:-16px;">
-            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--radius-md);padding:12px 14px;font-size:13px;font-weight:600;color:#16a34a;">
-                ✅ {{ session('success') }}
-            </div>
-        </div>
-    @endif
-
     @php
         $totalMobil         = \App\Models\Mobil::count();
         $mobilTersedia      = \App\Models\Mobil::where('status','tersedia')->count();
@@ -204,24 +192,28 @@
 
 </div>
 
-@if(Auth::user()->role === 'admin')
-    @include('admin.partials.bottom-nav')
-@else
-    @include('users.partials.bottom-nav')
-@endif
+@include('admin.partials.bottom-nav')
+
 <script>
-let toastTimer;
-function showToast(msg, type = '') {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = `toast ${type} show`;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
-}
 function confirmLogout() {
     document.getElementById('modal-logout').style.display = 'flex';
 }
 </script>
 
+
+<script>
+(function pollNotifBadge() {
+    fetch('{{ route("notifikasi.unread") }}', {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        var badge = document.getElementById('notif-badge');
+        if (badge) badge.style.display = data.unread > 0 ? 'block' : 'none';
+    })
+    .catch(() => {});
+    setTimeout(pollNotifBadge, 30000);
+})();
+</script>
 </body>
 </html>
