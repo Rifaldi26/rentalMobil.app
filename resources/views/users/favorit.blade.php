@@ -7,8 +7,8 @@
     @vite(['resources/css/dashboard.css'])
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
-
+<body class="user-page">
+@include('users.partials.desktop-sidebar')
 <nav class="nav">
     <button onclick="history.back()"
         style="background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;color:var(--gray-700);">

@@ -6,8 +6,8 @@
     <title>Pesan Mobil — Rental Mobil</title>
     @vite(['resources/css/dashboard.css', 'resources/css/pemesanan.css'])
 </head>
-<body>
-
+<body class="user-page">
+@include('users.partials.desktop-sidebar')
 {{-- ─── Top Nav ─── --}}
 <nav class="nav">
     <button class="nav-back" onclick="history.back()">

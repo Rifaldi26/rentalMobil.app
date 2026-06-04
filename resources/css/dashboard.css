@@ -615,3 +615,238 @@ nav div.flex-sm-fill > div:first-child {
     pointer-events: none;
 }
 @keyframes shimmer { to { background-position: -200% 0; } }
+/* ═══════════════════════════════════════════════════════════════
+   DESKTOP SIDEBAR — Tambahkan ke bagian bawah dashboard.css
+   Berlaku untuk semua halaman user yang pakai dashboard.css
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Sidebar Desktop (≥1024px) ─────────────────────────────── */
+@media (min-width: 1024px) {
+
+  /* Sidebar tetap di kiri */
+  .desktop-sidebar {
+    width: 260px;
+    background: var(--white);
+    border-right: 1px solid var(--gray-100);
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 200;
+    padding: 24px 20px;
+  }
+
+  .desktop-sidebar-brand {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--brand-400);
+    letter-spacing: -0.5px;
+    margin-bottom: 32px;
+  }
+  .desktop-sidebar-brand span { color: var(--accent-500); }
+
+  .desktop-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .desktop-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--radius-md);
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-700);
+    text-decoration: none;
+    transition: background .15s, color .15s;
+  }
+  .desktop-nav-link:hover {
+    background: var(--gray-50);
+    color: var(--gray-900);
+  }
+  .desktop-nav-link.active {
+    background: var(--brand-50);
+    color: var(--brand-400);
+  }
+  .desktop-nav-link svg {
+    width: 20px; height: 20px; flex-shrink: 0;
+  }
+
+  /* Kotak bantuan di bawah sidebar */
+  .desktop-sidebar-cta {
+    background: linear-gradient(135deg, var(--brand-600), var(--brand-900));
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    color: var(--white);
+    margin-top: 16px;
+  }
+  .desktop-sidebar-cta-sub  { font-size: 12px; opacity: .8; margin-bottom: 4px; }
+  .desktop-sidebar-cta-title { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+  .desktop-sidebar-cta-btn {
+    display: inline-block;
+    background: var(--accent-500);
+    color: var(--white);
+    font-family: var(--font);
+    font-size: 12px; font-weight: 700;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    border: none; cursor: pointer;
+  }
+
+  /* ─── Geser konten utama ke kanan ── */
+  /* Semua halaman user */
+  body.user-page .nav,
+  body.user-page > .content,
+  body.user-page > .filter-bar,
+  body.user-page > #filter-overlay {
+    left: 260px;
+  }
+
+  body.user-page .nav {
+    left: 260px;
+    right: 0;
+  }
+
+  body.user-page {
+    padding-left: 260px;
+  }
+
+  /* Sembunyikan bottom nav di desktop */
+  body.user-page .bottom-nav {
+    display: none !important;
+  }
+
+  /* Top nav di desktop — tampilan lebih bersih */
+  body.user-page .nav {
+    border-bottom: 1px solid var(--gray-100);
+    background: var(--white);
+  }
+
+  /* Konten max-width agar tidak terlalu lebar */
+  body.user-page .content {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Hero lebih compact di desktop */
+  body.user-page .hero {
+    border-radius: var(--radius-xl);
+    margin: 24px 24px 0;
+  }
+
+  /* Car grid 2 kolom di desktop */
+  body.user-page #cars-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Filter sheet max-width di desktop */
+  body.user-page .filter-sheet {
+    max-width: 480px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+  body.user-page .filter-sheet.open {
+    transform: translateX(-50%) translateY(0);
+  }
+
+}
+
+/* ─── Sidebar — mode mobile: tersembunyi ─────────────────────── */
+@media (max-width: 1023px) {
+  .desktop-sidebar { display: none !important; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SIDEBAR COLLAPSIBLE — tambahkan setelah blok sebelumnya
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1024px) {
+
+  /* Transisi sidebar */
+  .desktop-sidebar {
+    transition: width .25s cubic-bezier(.4,0,.2,1);
+    overflow: hidden;
+  }
+
+  /* Collapsed state — hanya tampilkan icon */
+  .desktop-sidebar.collapsed {
+    width: 64px;
+  }
+
+  /* Sembunyikan label teks saat collapsed */
+  .desktop-sidebar.collapsed .sidebar-label,
+  .desktop-sidebar.collapsed .sidebar-label-block {
+    display: none;
+  }
+
+  /* Nav link saat collapsed: center icon */
+  .desktop-sidebar.collapsed .desktop-nav-link {
+    justify-content: center;
+    padding: 12px 0;
+  }
+
+  /* Tombol toggle */
+  .sidebar-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    color: var(--gray-500);
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background .15s, color .15s;
+    flex-shrink: 0;
+  }
+  .sidebar-toggle-btn:hover {
+    background: var(--gray-100);
+    color: var(--gray-900);
+  }
+
+  /* Konten utama ikut menyesuaikan lebar sidebar */
+  body.user-page {
+    transition: padding-left .25s cubic-bezier(.4,0,.2,1);
+  }
+  body.user-page:has(#desktop-sidebar.collapsed) {
+    padding-left: 64px;
+  }
+  body.user-page:has(#desktop-sidebar.collapsed) .nav {
+    left: 64px;
+  }
+
+  /* Tooltip saat collapsed */
+  .desktop-sidebar.collapsed .desktop-nav-link {
+    position: relative;
+  }
+  .desktop-sidebar.collapsed .desktop-nav-link:hover::after {
+    content: attr(data-label);
+    position: absolute;
+    left: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--gray-900);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+}

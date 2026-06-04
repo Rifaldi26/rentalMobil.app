@@ -190,8 +190,8 @@
         }
     </style>
 </head>
-<body>
-
+<body class="user-page">
+@include('users.partials.desktop-sidebar')
 <nav class="nav">
     <div class="nav-brand">Rental<span>Mobil</span></div>
     <a href="{{ route('user.notifikasi') }}" class="nav-icon" style="position:relative;text-decoration:none;color:inherit;">

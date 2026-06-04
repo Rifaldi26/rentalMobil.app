@@ -82,8 +82,8 @@
         .btn-guest-home:active { background: var(--gray-100); }
     </style>
 </head>
-<body>
-
+<body class="user-page">
+@include('users.partials.desktop-sidebar')
 <nav class="nav">
     <div class="nav-brand">Rental<span>Mobil</span></div>
     

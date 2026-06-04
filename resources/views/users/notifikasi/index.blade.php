@@ -95,8 +95,8 @@
         }
     </style>
 </head>
-<body>
-
+<body class="user-page">
+@include('users.partials.desktop-sidebar')
 <nav class="nav">
     <a href="{{ route('dashboard') }}" style="background:none;border:none;cursor:pointer;padding:4px;">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">

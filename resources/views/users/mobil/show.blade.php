@@ -387,9 +387,10 @@
         .btn-guest-home:active { background: var(--gray-100); }
     </style>
 </head>
-<body>
+<body class="user-page">
 
 {{-- ─── Top Nav ─────────────────────────────────────────── --}}
+@include('users.partials.desktop-sidebar')
 <nav class="nav">
     <button onclick="history.back()"
         style="background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;color:var(--gray-700);">

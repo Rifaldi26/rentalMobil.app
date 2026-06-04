@@ -6,7 +6,8 @@
     <title>Pemesanan Saya — Rental Mobil</title>
     @vite(['resources/css/dashboard.css'])
 </head>
-<body>
+<body class="user-page">
+@include('users.partials.desktop-sidebar')
 
 <nav class="nav">
     <button onclick="window.location.href='{{ route('dashboard') }}'"

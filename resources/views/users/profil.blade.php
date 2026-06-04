@@ -6,8 +6,8 @@
     <title>Profil — Rental Mobil</title>
     @vite(['resources/css/dashboard.css'])
 </head>
-<body>
-
+<body class="user-page">
+@include('users.partials.desktop-sidebar')
 <nav class="nav">
     <button onclick="window.location.href='{{ route('dashboard') }}'"
         style="background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;color:var(--gray-700);">

@@ -74,8 +74,8 @@
         .empty-chat { text-align: center; padding: 48px 20px; color: var(--gray-500); }
     </style>
 </head>
-<body>
-
+<body class="user-page">
+@include('users.partials.desktop-sidebar')
 <nav class="nav">
     <button onclick="history.back()"
         style="background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;color:var(--gray-700);">
