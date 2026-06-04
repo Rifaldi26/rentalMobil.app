@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,12 +16,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Regular User (role default: 'pelanggan')
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password123',
+            'name'              => 'Test User',
+            'email'             => 'test@example.com',
+            'password'          => Hash::make('password123'),
+            'role'              => 'pelanggan',
+            'email_verified_at' => now(), // ✅ Wajib karena User implements MustVerifyEmail
+        ]);
+
+        // Admin User
+        User::factory()->create([
+            'name'              => 'Admin User',
+            'email'             => 'admin@example.com',
+            'password'          => Hash::make('admin123'),
+            'role'              => 'admin',
+            'email_verified_at' => now(), // ✅ Wajib agar admin bisa langsung login
         ]);
     }
 }

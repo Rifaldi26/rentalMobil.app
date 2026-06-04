@@ -38,20 +38,18 @@ Route::get('/', function () {
 // Detail mobil bisa dilihat tanpa login
 Route::get('/mobil/{mobil}', [MobilController::class, 'show'])->name('user.mobil.show');
 
-// Gateway dashboard — redirect ke halaman sesuai role setelah login
 Route::get('/dashboard', function () {
     return auth()->user()->role === 'admin'
         ? redirect()->route('admin.dashboard')
         : view('users.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+})->middleware(['auth'])->name('dashboard');
 /*
 |--------------------------------------------------------------------------
 | 2. AREA PELANGGAN
 | Middleware: auth + verified
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
     // ── Halaman Utama Pelanggan ─────────────────────────────────────────
     Route::get('/pemesanan', [PemesananController::class, 'userIndex'])->name('user.pemesanan.index');
@@ -95,7 +93,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 | Prefix: /admin | Name prefix: admin.
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'verified', IsAdmin::class])
+Route::middleware(['auth', IsAdmin::class])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -159,4 +157,7 @@ Route::middleware('auth')->group(function () {
 | Authentication Routes (Breeze)
 |--------------------------------------------------------------------------
 */
+Route::get('/auth/google',          [\App\Http\Controllers\Auth\GoogleController::class, 'redirect'])->name('auth.google');
+Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\GoogleController::class, 'callback'])->name('auth.google.callback');
+
 require __DIR__ . '/auth.php';
