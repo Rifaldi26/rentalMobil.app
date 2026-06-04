@@ -59,19 +59,14 @@
             <span style="font-size:14px;font-weight:600;color:var(--gray-800);">👤 Edit Profil</span>
             <span style="color:var(--gray-400);">›</span>
         </a>
-        <a href="{{ route('admin.pemesanan.index') }}"
-           style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100);text-decoration:none;">
-            <span style="font-size:14px;font-weight:600;color:var(--gray-800);">📋 Semua Pemesanan</span>
-            <span style="color:var(--gray-400);">›</span>
-        </a>
         <a href="{{ route('admin.user.index') }}"
            style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100);text-decoration:none;">
             <span style="font-size:14px;font-weight:600;color:var(--gray-800);">👥 Data Pelanggan</span>
             <span style="color:var(--gray-400);">›</span>
         </a>
-        <a href="{{ route('admin.mobil.index') }}"
+        <a href="{{ route('admin.laporan') }}"
            style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100);text-decoration:none;">
-            <span style="font-size:14px;font-weight:600;color:var(--gray-800);">🚗 Kelola Armada</span>
+            <span style="font-size:14px;font-weight:600;color:var(--gray-800);">📊 Laporan & Ekspor</span>
             <span style="color:var(--gray-400);">›</span>
         </a>
         <div onclick="confirmLogout()"

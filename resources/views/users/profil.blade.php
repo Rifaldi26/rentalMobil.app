@@ -68,21 +68,6 @@
             <span style="font-size:14px;font-weight:600;color:var(--gray-800);">👤 Edit Profil</span>
             <span style="color:var(--gray-400);">›</span>
         </a>
-        <a href="{{ route('user.pemesanan.index') }}"
-           style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100);text-decoration:none;">
-            <span style="font-size:14px;font-weight:600;color:var(--gray-800);">📋 Riwayat Pemesanan</span>
-            <span style="color:var(--gray-400);">›</span>
-        </a>
-        <a href="{{ route('user.favorit') }}"
-           style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100);text-decoration:none;">
-            <span style="font-size:14px;font-weight:600;color:var(--gray-800);">❤️ Mobil Favorit</span>
-            <span style="color:var(--gray-400);">›</span>
-        </a>
-        <div onclick="showToast('Bantuan & Dukungan')"
-             style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100);cursor:pointer;">
-            <span style="font-size:14px;font-weight:600;color:var(--gray-800);">❓ Bantuan</span>
-            <span style="color:var(--gray-400);">›</span>
-        </div>
         <div onclick="confirmLogout()"
              style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
             <span style="font-size:14px;font-weight:600;color:var(--danger);">🚪 Keluar</span>
