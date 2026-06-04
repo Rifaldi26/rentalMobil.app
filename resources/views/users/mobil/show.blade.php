@@ -802,42 +802,33 @@
 /* ─── Gallery slider ─────────────────────────────────────── */
 const TOTAL   = {{ $jumlahFoto }};
 let   current = 0;
-
+ 
 function goSlide(idx) {
     current = Math.max(0, Math.min(idx, TOTAL - 1));
     document.getElementById('slides').style.transform =
         `translateX(-${current * 100}%)`;
-
-    // Dots
     document.querySelectorAll('.gallery-dot').forEach((d, i) => {
         d.classList.toggle('active', i === current);
     });
-
-    // Counter
     const counter = document.getElementById('counter');
     if (counter) counter.textContent = `${current + 1} / ${TOTAL}`;
-
-    // Arrows
     const prev = document.getElementById('arrow-prev');
     const next = document.getElementById('arrow-next');
     if (prev) prev.classList.toggle('hidden', current === 0);
     if (next) next.classList.toggle('hidden', current === TOTAL - 1);
 }
-
+ 
 function galeri(dir) { goSlide(current + dir); }
-
-/* Touch swipe */
+ 
 @if($jumlahFoto > 1)
 (function () {
-    const el    = document.getElementById('gallery');
-    let   startX = 0, startY = 0, dragging = false;
-
+    const el = document.getElementById('gallery');
+    let startX = 0, startY = 0, dragging = false;
     el.addEventListener('touchstart', e => {
-        startX   = e.touches[0].clientX;
-        startY   = e.touches[0].clientY;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
         dragging = true;
     }, { passive: true });
-
     el.addEventListener('touchend', e => {
         if (!dragging) return;
         dragging = false;
@@ -848,10 +839,9 @@ function galeri(dir) { goSlide(current + dir); }
         }
     }, { passive: true });
 })();
-// init arrows
 goSlide(0);
 @endif
-
+ 
 /* ─── Deskripsi toggle ───────────────────────────────────── */
 function toggleDeskripsi() {
     const txt = document.getElementById('deskripsi-text');
@@ -862,149 +852,100 @@ function toggleDeskripsi() {
     btn.classList.toggle('expanded', !expanded);
     btn.childNodes[0].textContent = expanded ? 'Selengkapnya' : 'Sembunyikan ';
 }
-
-/* ─── Wishlist toggle via fetch (AJAX) ──────────────────────
-   Tidak reload halaman, langsung update UI + toast.          */
-function toggleWishlist(btn) {
-    const url     = btn.dataset.url;
-    const icon    = document.getElementById('heart-icon');
-    const mobilId = btn.dataset.url.match(/\/favorit\/(\d+)\//)?.[1];
-    const isFav   = btn.dataset.fav === 'true';
-    const willFav = !isFav;
-
-    // Optimistic UI
-    btn.classList.toggle('wishlisted', willFav);
-    icon.setAttribute('fill',   willFav ? '#fca5a5' : 'none');
-    icon.setAttribute('stroke', willFav ? '#dc2626' : 'var(--gray-700)');
-    btn.dataset.fav = willFav ? 'true' : 'false';
-    btn.title       = willFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
-    btn.disabled    = true;
-    // Simpan ke sessionStorage → dibaca dashboard saat back (tanpa delay)
-    if (mobilId) sessionStorage.setItem('fav_' + mobilId, willFav ? 'true' : 'false');
-
-    fetch(url, {
-        method : 'POST',
-        headers: {
-            'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]')?.content
-                             ?? '{{ csrf_token() }}',
-            'Accept'       : 'application/json',
-            'Content-Type' : 'application/json',
-        },
-    })
-    .then(res => res.json())
-    .then(data => {
-        const serverFav = data.favorited;
-        btn.classList.toggle('wishlisted', serverFav);
-        icon.setAttribute('fill',   serverFav ? '#fca5a5' : 'none');
-        icon.setAttribute('stroke', serverFav ? '#dc2626' : 'var(--gray-700)');
-        btn.dataset.fav = serverFav ? 'true' : 'false';
-        btn.title       = serverFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
-        // Sinkronisasi ke sessionStorage dengan nilai server
-        if (mobilId) sessionStorage.setItem('fav_' + mobilId, serverFav ? 'true' : 'false');
-        // favorit updated
-    })
-    .catch(() => {
-        // Rollback
-        btn.classList.toggle('wishlisted', isFav);
-        icon.setAttribute('fill',   isFav ? '#fca5a5' : 'none');
-        icon.setAttribute('stroke', isFav ? '#dc2626' : 'var(--gray-700)');
-        btn.dataset.fav = isFav ? 'true' : 'false';
-        if (mobilId) sessionStorage.setItem('fav_' + mobilId, isFav ? 'true' : 'false');
-        // gagal
-    })
-    .finally(() => { btn.disabled = false; });
+ 
+/* ─── Guest page ─────────────────────────────────────────── */
+var isLoggedIn = {{ Auth::check() ? 'true' : 'false' }};
+ 
+function showGuestPage() {
+    var el = document.getElementById('guest-switch-page');
+    if (el) el.classList.add('active');
 }
-
+ 
+function closeGuestPage() {
+    var el = document.getElementById('guest-switch-page');
+    if (el) el.classList.remove('active');
+}
+ 
 /* ─── Share ──────────────────────────────────────────────── */
 function shareHalaman() {
     const data = {
-        title: '{{ $mobil->nama }} — Rental Mobil',
-        text:  'Cek kendaraan ini: {{ $mobil->nama }} ({{ $mobil->merek }}, {{ $mobil->tahun }})',
-        url:   window.location.href,
+        title : '{{ $mobil->nama }} — Rental Mobil',
+        text  : 'Cek kendaraan ini: {{ $mobil->nama }} ({{ $mobil->merek }}, {{ $mobil->tahun }})',
+        url   : window.location.href,
     };
     if (navigator.share) {
         navigator.share(data).catch(() => {});
     } else {
         navigator.clipboard.writeText(window.location.href)
-            .then(() => {})
+            .then(() => { showToast('🔗 Link disalin!'); })
             .catch(() => {});
     }
 }
-// 1. Cek status login dari Blade
-var isLoggedIn = {{ Auth::check() ? 'true' : 'false' }};
-
-// 2. Fungsi penahan Guest (Pastikan HTML Switch Page sudah ada di file ini)
-function showGuestPage() {
-    var guestPage = document.getElementById('guest-switch-page');
-    if (guestPage) {
-        guestPage.classList.add('active');
-    }
-}
-
-function closeGuestPage() {
-    var guestPage = document.getElementById('guest-switch-page');
-    if (guestPage) {
-        guestPage.classList.remove('active');
-    }
-}
-
-// 3. Fungsi Utama Tombol Favorit
+ 
+/* ─── Wishlist toggle ────────────────────────────────────── */
 function toggleWishlist(btn) {
-    // Tahan aksi jika pengunjung belum login
+    // Tahan jika belum login
     if (!isLoggedIn) {
         showGuestPage();
         return;
     }
-
-    var url = btn.dataset.url;
-    var isFav = btn.dataset.fav === 'true';
-    var willFav = !isFav;
-    var svg = btn.querySelector('#heart-icon');
-
-    // Optimistic UI (Ubah tampilan sebelum server membalas biar terasa cepat)
-    svg.setAttribute('fill', willFav ? '#fca5a5' : 'none');
-    svg.setAttribute('stroke', willFav ? '#dc2626' : 'var(--gray-700)');
-    btn.dataset.fav = willFav ? 'true' : 'false';
+ 
+    const url    = btn.dataset.url;
+    const icon   = document.getElementById('heart-icon');
+    const mobilId = url.match(/\/favorit\/(\d+)\//)?.[1];
+    const isFav  = btn.dataset.fav === 'true';
+    const willFav = !isFav;
+ 
+    // Optimistic UI
+    icon.setAttribute('fill',   willFav ? '#fca5a5' : 'none');
+    icon.setAttribute('stroke', willFav ? '#dc2626' : 'var(--gray-700)');
     btn.classList.toggle('wishlisted', willFav);
-    btn.disabled = true;
-
-    // Kirim request ke server
+    btn.dataset.fav = willFav ? 'true' : 'false';
+    btn.title       = willFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
+    btn.disabled    = true;
+    if (mobilId) sessionStorage.setItem('fav_' + mobilId, willFav ? 'true' : 'false');
+ 
     fetch(url, {
-        method: 'POST',
+        method : 'POST',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN'    : document.querySelector('meta[name="csrf-token"]').content,
+            'Accept'          : 'application/json',
+            'Content-Type'    : 'application/json',
             'X-Requested-With': 'XMLHttpRequest',
-        }
+        },
     })
-    .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
-    .then(function(d) {
-        // Sinkronkan data jika sukses
-        svg.setAttribute('fill', d.favorited ? '#fca5a5' : 'none');
-        svg.setAttribute('stroke', d.favorited ? '#dc2626' : 'var(--gray-700)');
-        btn.dataset.fav = d.favorited ? 'true' : 'false';
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => {
+        icon.setAttribute('fill',   d.favorited ? '#fca5a5' : 'none');
+        icon.setAttribute('stroke', d.favorited ? '#dc2626' : 'var(--gray-700)');
         btn.classList.toggle('wishlisted', d.favorited);
-        btn.setAttribute('title', d.favorited ? 'Hapus dari Favorit' : 'Tambah ke Favorit');
-        
-        }
+        btn.dataset.fav = d.favorited ? 'true' : 'false';
+        btn.title       = d.favorited ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
+        if (mobilId) sessionStorage.setItem('fav_' + mobilId, d.favorited ? 'true' : 'false');
+        showToast(d.favorited ? '❤️ Ditambahkan ke favorit' : '🤍 Dihapus dari favorit');
     })
-    .catch(function() {
-        // Kembalikan ke state awal jika request gagal
-        svg.setAttribute('fill', isFav ? '#fca5a5' : 'none');
-        svg.setAttribute('stroke', isFav ? '#dc2626' : 'var(--gray-700)');
-        btn.dataset.fav = isFav ? 'true' : 'false';
+    .catch(() => {
+        // Rollback
+        icon.setAttribute('fill',   isFav ? '#fca5a5' : 'none');
+        icon.setAttribute('stroke', isFav ? '#dc2626' : 'var(--gray-700)');
         btn.classList.toggle('wishlisted', isFav);
-        
-        } else {
-            alert('Gagal update favorit');
-        }
+        btn.dataset.fav = isFav ? 'true' : 'false';
+        if (mobilId) sessionStorage.setItem('fav_' + mobilId, isFav ? 'true' : 'false');
+        showToast('⚠️ Gagal update favorit');
     })
-    .finally(function() {
-        btn.disabled = false;
-    });
+    .finally(() => { btn.disabled = false; });
+}
+ 
+/* ─── Toast ──────────────────────────────────────────────── */
+var toastTimer;
+function showToast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent  = msg;
+    t.style.opacity = '1';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.style.opacity = '0'; }, 3000);
 }
 </script>
-
 </body>
 </html>
