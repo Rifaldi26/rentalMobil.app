@@ -1,0 +1,301 @@
+/* =============================================================
+   SIDEBAR ADMIN — Dark sidebar, semua ukuran layar
+   Mobile & tablet: collapsed (icon only)
+   Desktop: expanded + collapsible via toggle
+   ============================================================= */
+
+/* ── Shell ───────────────────────────────────────────────── */
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--admin-sidebar-w);
+  background: var(--sidebar-dark-bg);
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+  transition: width var(--transition-spring);
+  overflow: hidden;
+}
+
+/* ── Brand ───────────────────────────────────────────────── */
+.admin-sidebar-brand {
+  padding: 20px 16px 16px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--white);
+  border-bottom: 1px solid var(--sidebar-dark-border);
+  white-space: nowrap;
+  overflow: hidden;
+  flex-shrink: 0;
+  letter-spacing: -.3px;
+}
+.admin-sidebar-brand span { color: var(--accent-500); }
+
+/* ── Toggle button ───────────────────────────────────────── */
+.admin-sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: 12px auto 0;
+  background: rgba(255,255,255,.08);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: rgba(255,255,255,.65);
+  transition: background var(--transition-fast), color var(--transition-fast);
+  flex-shrink: 0;
+}
+.admin-sidebar-toggle:hover { background: rgba(255,255,255,.15); color: var(--white); }
+
+/* ── Nav ─────────────────────────────────────────────────── */
+.admin-sidebar-nav {
+  flex: 1;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Scrollbar tipis di sidebar */
+.admin-sidebar-nav::-webkit-scrollbar { width: 3px; }
+.admin-sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 3px; }
+
+/* ── Nav Section Label ───────────────────────────────────── */
+.admin-nav-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--sidebar-dark-text-dim);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 12px 8px 4px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ── Nav Link ────────────────────────────────────────────── */
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--sidebar-dark-text);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  border: none;
+  background: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.admin-nav-link svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.admin-nav-link:hover  { background: var(--sidebar-dark-hover); color: var(--white); }
+.admin-nav-link.active { background: var(--sidebar-dark-active); color: var(--white); }
+
+/* ── Nav Badge (pending count) ───────────────────────────── */
+.admin-nav-badge {
+  margin-left: auto;
+  background: var(--danger);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* ── Footer (user info + logout) ─────────────────────────── */
+.admin-sidebar-footer {
+  padding: 12px 8px;
+  border-top: 1px solid var(--sidebar-dark-border);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.admin-sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.admin-sidebar-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--brand-400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+  flex-shrink: 0;
+}
+
+.admin-sidebar-user-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-sidebar-user-role {
+  font-size: 11px;
+  color: var(--sidebar-dark-text-dim);
+}
+
+.admin-sidebar-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: rgba(220,38,38,.15);
+  color: #fca5a5;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.admin-sidebar-logout:hover { background: rgba(220,38,38,.3); }
+.admin-sidebar-logout svg { flex-shrink: 0; }
+
+
+/* =============================================================
+   COLLAPSED STATE
+   ============================================================= */
+
+.admin-sidebar.collapsed { width: var(--admin-sidebar-collapsed-w); }
+
+/* Sembunyikan teks saat collapsed */
+.admin-sidebar.collapsed .admin-sidebar-brand  { display: none; }
+.admin-sidebar.collapsed .admin-nav-label      { display: none; }
+.admin-sidebar.collapsed .admin-nav-link-label { display: none; }
+.admin-sidebar.collapsed .admin-nav-badge      { display: none; }
+.admin-sidebar.collapsed .admin-sidebar-user-info { display: none; }
+.admin-sidebar.collapsed .admin-sidebar-logout span { display: none; }
+
+/* Nav link: center icon */
+.admin-sidebar.collapsed .admin-nav-link {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+/* Logout: center icon */
+.admin-sidebar.collapsed .admin-sidebar-logout {
+  justify-content: center;
+  padding: 9px 0;
+}
+
+/* Tooltip saat collapsed */
+.admin-sidebar.collapsed .admin-nav-link::after {
+  content: attr(data-label);
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1e293b;
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+  z-index: 300;
+}
+.admin-sidebar.collapsed .admin-nav-link:hover::after { opacity: 1; }
+
+
+/* =============================================================
+   RESPONSIVE — Mobile & Tablet selalu collapsed
+   Desktop bisa expanded/collapsed via toggle
+   ============================================================= */
+
+/* Mobile (< 768px): collapsed otomatis */
+@media (max-width: 767px) {
+  .admin-sidebar {
+    width: var(--admin-sidebar-collapsed-w);
+  }
+  /* Override expanded state di mobile */
+  .admin-sidebar:not(.collapsed) {
+    width: var(--admin-sidebar-collapsed-w);
+  }
+  /* Sembunyikan label di mobile selalu */
+  .admin-sidebar .admin-sidebar-brand,
+  .admin-sidebar .admin-nav-label,
+  .admin-sidebar .admin-nav-link-label,
+  .admin-sidebar .admin-nav-badge,
+  .admin-sidebar .admin-sidebar-user-info,
+  .admin-sidebar .admin-sidebar-logout span { display: none; }
+
+  .admin-sidebar .admin-nav-link {
+    justify-content: center;
+    padding: 12px 0;
+  }
+  .admin-sidebar .admin-sidebar-logout {
+    justify-content: center;
+    padding: 9px 0;
+  }
+  /* Toggle button: sembunyikan di mobile */
+  .admin-sidebar-toggle { display: none; }
+}
+
+/* Tablet (768px - 1023px): collapsed otomatis */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .admin-sidebar {
+    width: var(--admin-sidebar-collapsed-w);
+  }
+  .admin-sidebar:not(.collapsed) {
+    width: var(--admin-sidebar-collapsed-w);
+  }
+  .admin-sidebar .admin-sidebar-brand,
+  .admin-sidebar .admin-nav-label,
+  .admin-sidebar .admin-nav-link-label,
+  .admin-sidebar .admin-nav-badge,
+  .admin-sidebar .admin-sidebar-user-info,
+  .admin-sidebar .admin-sidebar-logout span { display: none; }
+
+  .admin-sidebar .admin-nav-link {
+    justify-content: center;
+    padding: 12px 0;
+  }
+  .admin-sidebar .admin-sidebar-logout {
+    justify-content: center;
+    padding: 9px 0;
+  }
+  .admin-sidebar-toggle { display: none; }
+}
+
+/* Desktop (≥ 1024px): bisa expanded/collapsed */
+@media (min-width: 1024px) {
+  .admin-sidebar-toggle { display: flex; }
+}

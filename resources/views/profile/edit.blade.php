@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profil — Rental Mobil</title>
-    @vite(['resources/css/dashboard.css'])
+    @vite(['resources/css/admin.css'])
     <style>
         .form-label {
             display: block; font-size: 12px; font-weight: 700;
@@ -121,12 +121,8 @@
 
     {{-- ── Section 1: Info Profil ── --}}
     <div class="section-card">
-        <div class="section-title">👤 Informasi Profil</div>
+        <div class="section-title">Informasi Profil</div>
         <div class="section-desc">Perbarui nama, email, dan nomor HP akun kamu</div>
-
-        <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-            @csrf
-        </form>
 
         <form method="post" action="{{ route('profile.update') }}">
             @csrf
@@ -135,9 +131,9 @@
             <div class="form-group">
                 <label class="form-label" for="name">Nama Lengkap</label>
                 <input id="name" name="name" type="text"
-                       class="form-input {{ $errors->get('name') ? 'error' : '' }}"
-                       value="{{ old('name', $user->name) }}"
-                       required autocomplete="name">
+                    class="form-input {{ $errors->get('name') ? 'error' : '' }}"
+                    value="{{ old('name', $user->name) }}"
+                    required autocomplete="name">
                 @if ($errors->get('name'))
                     <div class="field-error">{{ $errors->first('name') }}</div>
                 @endif
@@ -146,42 +142,27 @@
             <div class="form-group">
                 <label class="form-label" for="email">Alamat Email</label>
                 <input id="email" name="email" type="email"
-                       class="form-input {{ $errors->get('email') ? 'error' : '' }}"
-                       value="{{ old('email', $user->email) }}"
-                       required autocomplete="email">
+                    class="form-input {{ $errors->get('email') ? 'error' : '' }}"
+                    value="{{ old('email', $user->email) }}"
+                    required autocomplete="email">
                 @if ($errors->get('email'))
                     <div class="field-error">{{ $errors->first('email') }}</div>
-                @endif
-
-                @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                    <div style="margin-top:10px;padding:10px 12px;background:#fffbeb;border:1px solid #fef08a;border-radius:var(--radius-sm);">
-                        <div style="font-size:12px;color:#a16207;margin-bottom:6px;">⚠️ Email belum terverifikasi</div>
-                        <button form="send-verification"
-                            style="font-size:12px;font-weight:600;color:var(--brand-400);background:none;border:none;cursor:pointer;padding:0;font-family:var(--font);">
-                            Kirim ulang email verifikasi →
-                        </button>
-                        @if (session('status') === 'verification-link-sent')
-                            <div style="font-size:12px;color:#16a34a;margin-top:6px;font-weight:600;">
-                                ✅ Link verifikasi telah dikirim!
-                            </div>
-                        @endif
-                    </div>
                 @endif
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="no_hp">Nomor HP</label>
                 <input id="no_hp" name="no_hp" type="tel"
-                       class="form-input"
-                       value="{{ old('no_hp', $user->no_hp ?? '') }}"
-                       placeholder="Contoh: 08123456789"
-                       autocomplete="tel">
+                    class="form-input"
+                    value="{{ old('no_hp', $user->no_hp ?? '') }}"
+                    placeholder="Contoh: 08123456789"
+                    autocomplete="tel">
             </div>
 
             <button type="submit" class="btn-primary">Simpan Perubahan</button>
 
             @if (session('status') === 'profile-updated')
-                <div class="success-pill">✅ Profil berhasil diperbarui</div>
+                <div class="success-pill">Profil berhasil diperbarui</div>
             @endif
         </form>
     </div>

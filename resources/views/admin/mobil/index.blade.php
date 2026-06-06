@@ -1,136 +1,152 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Mobil — Admin</title>
-    @vite(['resources/css/dashboard.css'])
-</head>
-<body>
+@extends('layouts.admin')
+@section('title', 'Kelola Mobil')
+@section('page-title', 'Kelola Mobil')
 
-{{-- ═══ TOP NAV ═══════════════════════════════════════════ --}}
-<nav class="nav">
-    <button onclick="window.location.href='{{ route('admin.dashboard') }}'" style="background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;color:var(--gray-700);">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <path d="M19 12H5M12 5l-7 7 7 7"/>
-        </svg>
-    </button>
-    <div class="nav-brand" style="font-size:16px;">Kelola Mobil</div>
-    <a href="{{ route('admin.mobil.create') }}"
-       style="background:var(--brand-400);color:#fff;border:none;border-radius:var(--radius-sm);padding:7px 14px;font-size:13px;font-weight:700;text-decoration:none;">
-        + Tambah
-    </a>
-</nav>
+@section('content')
+<div class="admin-content">
 
-<div class="content" style="padding:16px 20px 100px;">
-
+    {{-- Flash message --}}
     @if (session('success'))
-        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--radius-md);padding:12px 14px;font-size:13px;font-weight:600;color:#16a34a;margin-bottom:16px;">
-            ✅ {{ session('success') }}
+        <div class="alert alert-success">
+            {{ session('success') }}
         </div>
     @endif
 
     {{-- Ringkasan --}}
-    @php
-        $totalMobil    = $mobils->total();
-        $tersediaCount = \App\Models\Mobil::where('status','tersedia')->count();
-        $disewaCount   = \App\Models\Mobil::where('status','disewa')->count();
-    @endphp
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;">
-        <div style="background:#fff;border:1px solid var(--gray-100);border-radius:var(--radius-md);padding:14px;text-align:center;">
-            <div style="font-size:22px;font-weight:800;color:var(--gray-900);">{{ $totalMobil }}</div>
-            <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">Total Unit</div>
+    <div class="stat-grid stat-grid--3 mb-20">
+        <div class="stat-card">
+            <div class="stat-card__value">{{ $totalMobil }}</div>
+            <div class="stat-card__label">Total Unit</div>
         </div>
-        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--radius-md);padding:14px;text-align:center;">
-            <div style="font-size:22px;font-weight:800;color:#16a34a;">{{ $tersediaCount }}</div>
-            <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">Tersedia</div>
+        <div class="stat-card stat-card--success">
+            <div class="stat-card__value">{{ $tersediaCount }}</div>
+            <div class="stat-card__label">Tersedia</div>
         </div>
-        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:var(--radius-md);padding:14px;text-align:center;">
-            <div style="font-size:22px;font-weight:800;color:#dc2626;">{{ $disewaCount }}</div>
-            <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">Disewa</div>
+        <div class="stat-card stat-card--danger">
+            <div class="stat-card__value">{{ $disewaCount }}</div>
+            <div class="stat-card__label">Disewa</div>
         </div>
     </div>
 
     {{-- Filter --}}
-    <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;">
-        <button class="cat-chip {{ !request('status') ? 'active' : '' }}"
-            onclick="window.location='{{ route('admin.mobil.index') }}'"
-            style="flex-direction:row;min-width:auto;padding:8px 16px;font-size:12px;">Semua</button>
-        <button class="cat-chip {{ request('status') === 'tersedia' ? 'active' : '' }}"
-            onclick="window.location='{{ route('admin.mobil.index', ['status' => 'tersedia']) }}'"
-            style="flex-direction:row;min-width:auto;padding:8px 16px;font-size:12px;">✅ Tersedia</button>
-        <button class="cat-chip {{ request('status') === 'disewa' ? 'active' : '' }}"
-            onclick="window.location='{{ route('admin.mobil.index', ['status' => 'disewa']) }}'"
-            style="flex-direction:row;min-width:auto;padding:8px 16px;font-size:12px;">🔴 Disewa</button>
+    <div class="filter-chips mb-16">
+        <a href="{{ route('admin.mobil.index') }}"
+           class="filter-chip {{ !request('status') ? 'active' : '' }}">
+            Semua
+        </a>
+        <a href="{{ route('admin.mobil.index', ['status' => 'tersedia']) }}"
+           class="filter-chip {{ request('status') === 'tersedia' ? 'active' : '' }}">
+            Tersedia
+        </a>
+        <a href="{{ route('admin.mobil.index', ['status' => 'disewa']) }}"
+           class="filter-chip {{ request('status') === 'disewa' ? 'active' : '' }}">
+            Disewa
+        </a>
     </div>
 
     {{-- Daftar Mobil --}}
     @forelse ($mobils as $mobil)
-        <div class="booking-item" style="margin-bottom:10px;">
-            <div style="display:flex;gap:12px;align-items:flex-start;">
-                <div style="width:80px;height:64px;border-radius:var(--radius-sm);overflow:hidden;flex-shrink:0;background:var(--gray-100);display:flex;align-items:center;justify-content:center;">
+        <div class="mobil-card mb-10">
+            <div class="mobil-card__main">
+
+                {{-- Thumbnail --}}
+                <div class="mobil-card__thumb">
                     @if ($mobil->foto)
-                        <img src="{{ asset('storage/'.$mobil->foto) }}" style="width:100%;height:100%;object-fit:cover;">
+                        <img src="{{ asset('storage/'.$mobil->foto) }}"
+                            class="mobil-card__img" alt="{{ $mobil->nama }}">
                     @else
-                        <span style="font-size:28px;">🚗</span>
+                        <div class="mobil-card__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                width="32" height="32">
+                                <path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1l2-3h10l2 3h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/>
+                                <circle cx="7.5" cy="17" r="2.5"/>
+                                <circle cx="16.5" cy="17" r="2.5"/>
+                            </svg>
+                        </div>
                     @endif
                 </div>
-                <div style="flex:1;min-width:0;">
-                    <div style="font-size:14px;font-weight:700;color:var(--gray-900);">{{ $mobil->nama }}</div>
-                    <div style="font-size:12px;color:var(--gray-500);margin-top:1px;">{{ $mobil->merek }} · {{ $mobil->tahun }} · {{ $mobil->plat_nomor }}</div>
-                    <div style="font-size:14px;font-weight:800;color:var(--brand-400);margin-top:4px;">
-                        Rp {{ number_format($mobil->harga_per_hari, 0, ',', '.') }}<span style="font-size:11px;font-weight:500;color:var(--gray-500);">/hari</span>
+
+                {{-- Info --}}
+                <div class="mobil-card__info">
+                    <div class="mobil-card__nama">{{ $mobil->nama }}</div>
+                    <div class="mobil-card__meta">
+                        {{ $mobil->merek }} · {{ $mobil->tahun }} · {{ $mobil->plat_nomor }}
+                    </div>
+                    <div class="mobil-card__harga">
+                        Rp {{ number_format($mobil->harga_per_hari, 0, ',', '.') }}
+                        <span class="mobil-card__harga-unit">/hari</span>
                     </div>
                 </div>
-                <form action="{{ route('admin.mobil.toggle', $mobil) }}" method="POST" style="flex-shrink:0;">
+
+                {{-- Toggle Status --}}
+                <form action="{{ route('admin.mobil.toggle', $mobil) }}" method="POST"
+                      class="mobil-card__toggle-form">
                     @csrf @method('PATCH')
-                    <button type="submit" style="padding:5px 10px;border:none;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;
-                        {{ $mobil->status === 'tersedia' ? 'background:#f0fdf4;color:#16a34a;' : 'background:#fef2f2;color:#dc2626;' }}">
-                        {{ $mobil->status === 'tersedia' ? '✅ Tersedia' : '🔴 Disewa' }}
+                    <button type="submit"
+                            class="badge badge--{{ $mobil->status === 'tersedia' ? 'success' : 'danger' }}">
+                        {{ $mobil->status === 'tersedia' ? ' Tersedia' : ' Disewa' }}
                     </button>
                 </form>
+
             </div>
+
+            {{-- Deskripsi --}}
             @if ($mobil->deskripsi)
-                <div style="font-size:12px;color:var(--gray-500);margin-top:8px;line-height:1.5;">
+                <div class="mobil-card__desc">
                     {{ Str::limit($mobil->deskripsi, 80) }}
                 </div>
             @endif
-            <div style="display:flex;gap:8px;margin-top:10px;">
-                <a href="{{ route('admin.mobil.edit', $mobil) }}"
-                   style="flex:1;padding:9px;background:var(--brand-50);color:var(--brand-400);border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:700;text-align:center;text-decoration:none;">
-                    ✏️ Edit
-                </a>
-                <form action="{{ route('admin.mobil.destroy', $mobil) }}" method="POST" style="flex:1;"
-                      onsubmit="return confirm('Hapus {{ addslashes($mobil->nama) }}?')">
-                    @csrf @method('DELETE')
-                    <button type="submit" style="width:100%;padding:9px;background:#fef2f2;color:#dc2626;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:700;cursor:pointer;">
-                        🗑 Hapus
-                    </button>
-                </form>
-            </div>
+
+            {{-- Aksi --}}
+            <a href="{{ route('admin.mobil.edit', $mobil) }}" class="btn btn-outline btn-sm btn--flex">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit
+            </a>
+            <form action="{{ route('admin.mobil.destroy', $mobil) }}" method="POST"
+                class="btn--flex"
+                data-confirm="Hapus {{ $mobil->nama }}?">
+                @csrf @method('DELETE')
+                <button type="submit" class="btn btn-danger-soft btn-sm w-full">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6M14 11v6"/>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                    </svg>
+                    Hapus
+                </button>
+            </form>
         </div>
     @empty
-        <div style="text-align:center;padding:60px 20px;color:var(--gray-500);">
-            <div style="font-size:48px;margin-bottom:12px;">🚗</div>
-            <div style="font-weight:600;font-size:15px;">Belum ada data mobil</div>
-            <a href="{{ route('admin.mobil.create') }}"
-               style="display:inline-block;margin-top:16px;padding:12px 24px;background:var(--brand-400);color:#fff;border-radius:var(--radius-md);font-weight:700;text-decoration:none;">
+        <div class="empty-state">
+            <div class="empty-state__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    width="48" height="48">
+                    <path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1l2-3h10l2 3h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/>
+                    <circle cx="7.5" cy="17" r="2.5"/>
+                    <circle cx="16.5" cy="17" r="2.5"/>
+                </svg>
+            </div>
+            <div class="empty-state__title">Belum ada data mobil</div>
+            <a href="{{ route('admin.mobil.create') }}" class="btn btn-primary mt-16">
                 + Tambah Mobil Pertama
             </a>
         </div>
     @endforelse
 
+    {{-- Pagination --}}
     @if ($mobils->hasPages())
-        <div style="margin-top:16px;">{{ $mobils->appends(request()->query())->links() }}</div>
+        <div class="pagination-wrapper">
+            {{ $mobils->appends(request()->query())->links() }}
+        </div>
     @endif
 
 </div>
-
-{{-- ═══ BOTTOM NAV — dari partial ════════════════════════ --}}
-@if(Auth::user()->role === 'admin')
-    @include('admin.partials.bottom-nav')
-@else
-    @include('users.partials.bottom-nav')
-@endif
-</body>
-</html>
+@endsection

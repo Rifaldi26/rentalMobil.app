@@ -1,0 +1,267 @@
+/* =============================================================
+   TOPBAR — Top navigation bar (mobile header)
+   ============================================================= */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--topbar-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-100);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 100;
+  gap: 12px;
+}
+
+.topbar-brand {
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--brand-400);
+  letter-spacing: -.5px;
+  flex: 1;
+}
+.topbar-brand span { color: var(--accent-500); }
+
+.topbar-title {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gray-900);
+  text-align: center;
+}
+
+/* ── Back button ─────────────────────────────────────────── */
+.topbar-back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--gray-700);
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+}
+.topbar-back:hover { background: var(--gray-100); }
+
+/* ── Notification icon ───────────────────────────────────── */
+.topbar-icon {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  color: var(--gray-700);
+  text-decoration: none;
+  transition: background var(--transition-fast);
+}
+.topbar-icon:hover { background: var(--gray-200); }
+
+
+/* =============================================================
+   BOTTOM NAV — Navigasi bawah untuk user (mobile)
+   ============================================================= */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--bottom-nav-h);
+  background: var(--white);
+  border-top: 1px solid var(--gray-100);
+  display: flex;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, .06);
+}
+
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--gray-500);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+  padding: 8px 0;
+  text-decoration: none;
+}
+.bottom-nav-item.active { color: var(--brand-400); }
+.bottom-nav-item svg    { width: 22px; height: 22px; }
+
+/* ── Center FAB button ───────────────────────────────────── */
+.bottom-nav-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bottom-nav-fab {
+  width: 52px;
+  height: 52px;
+  background: var(--brand-400);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, .4);
+  transition: transform var(--transition-fast);
+  text-decoration: none;
+}
+.bottom-nav-fab:active { transform: scale(.94); }
+
+/* =============================================================
+   TOPBAR ADMIN — Avatar dropdown
+   ============================================================= */
+
+.topbar-avatar-wrap {
+    position: relative;
+}
+
+.topbar-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--brand-400);
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity var(--transition-fast);
+    flex-shrink: 0;
+}
+.topbar-avatar:hover { opacity: .85; }
+
+/* ── Dropdown panel ───────────────────────────────────────── */
+.topbar-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 240px;
+    background: var(--white);
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 500;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+.topbar-dropdown.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* ── Header (info user) ───────────────────────────────────── */
+.topbar-dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+}
+.topbar-dropdown-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--brand-400);
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.topbar-dropdown-info    { min-width: 0; }
+.topbar-dropdown-name  {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray-900);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.topbar-dropdown-email {
+    font-size: 11px;
+    color: var(--gray-500);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+}
+
+.topbar-dropdown-divider {
+    height: 1px;
+    background: var(--gray-100);
+    margin: 4px 0;
+}
+
+/* ── Item ─────────────────────────────────────────────────── */
+.topbar-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 16px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-700);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--transition-fast);
+    text-align: left;
+}
+.topbar-dropdown-item:hover { background: var(--gray-50); }
+.topbar-dropdown-item svg   { flex-shrink: 0; color: var(--gray-400); }
+
+.topbar-dropdown-item--danger       { color: var(--danger); }
+.topbar-dropdown-item--danger svg   { color: var(--danger); }
+.topbar-dropdown-item--danger:hover { background: var(--danger-bg); }
+/* =============================================================
+   RESPONSIVE — Bottom nav & topbar visibility
+   ============================================================= */
+
+/* User pages */
+@media (min-width: 1024px) {
+  /* Bottom nav disembunyikan di desktop (user pakai sidebar) */
+  body.page-user .bottom-nav { display: none !important; }
+
+  /* Topbar pada user page geser sesuai sidebar */
+  body.page-user .topbar {
+    left: var(--user-sidebar-w);
+    transition: left var(--transition-spring);
+  }
+  body.page-user:has(.user-sidebar.collapsed) .topbar {
+    left: var(--user-sidebar-collapsed-w);
+  }
+}
+
+/* Admin pages — bottom nav tidak pernah muncul */
+body.page-admin .bottom-nav { display: none !important; }

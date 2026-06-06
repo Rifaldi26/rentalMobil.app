@@ -1,23 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Pemesanan;
 use App\Models\Mobil;
+use App\Models\Penarikan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class LaporanController extends Controller
 {
-    /**
-     * Halaman laporan utama
-     */
     public function index(Request $request)
     {
         $tahun = $request->get('tahun', now()->year);
 
-        // ── Data chart pendapatan per bulan ─────────────────────────────
         $pendapatanPerBulan = Pemesanan::selectRaw('MONTH(updated_at) as bulan, SUM(total_harga) as total')
             ->where('status', 'selesai')
             ->whereYear('updated_at', $tahun)
@@ -26,21 +22,20 @@ class LaporanController extends Controller
             ->get()
             ->keyBy('bulan');
 
+        $namaBulan   = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         $chartLabels = [];
         $chartData   = [];
-        $namaBulan   = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
         for ($i = 1; $i <= 12; $i++) {
             $chartLabels[] = $namaBulan[$i];
             $chartData[]   = (int) ($pendapatanPerBulan[$i]->total ?? 0);
         }
 
-        // ── Data chart pemesanan per status ─────────────────────────────
         $statusCount = Pemesanan::selectRaw('status, COUNT(*) as total')
             ->whereYear('created_at', $tahun)
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        // ── Top 5 mobil terlaris ────────────────────────────────────────
         $topMobil = Pemesanan::selectRaw('mobil_id, COUNT(*) as total_sewa, SUM(total_harga) as pendapatan')
             ->with('mobil:id,nama,merek')
             ->where('status', 'selesai')
@@ -50,7 +45,6 @@ class LaporanController extends Controller
             ->limit(5)
             ->get();
 
-        // ── Ringkasan tahun berjalan ─────────────────────────────────────
         $ringkasan = [
             'pendapatan_total' => Pemesanan::where('status', 'selesai')->whereYear('updated_at', $tahun)->sum('total_harga'),
             'total_selesai'    => Pemesanan::where('status', 'selesai')->whereYear('created_at', $tahun)->count(),
@@ -66,9 +60,6 @@ class LaporanController extends Controller
         ));
     }
 
-    /**
-     * Export CSV semua pemesanan
-     */
     public function exportCsv(Request $request)
     {
         $tahun  = $request->get('tahun', now()->year);
@@ -83,8 +74,7 @@ class LaporanController extends Controller
         }
 
         $pemesanans = $query->get();
-
-        $filename = 'laporan-pemesanan-' . $tahun . ($status ? '-' . $status : '') . '.csv';
+        $filename   = 'laporan-pemesanan-' . $tahun . ($status ? '-' . $status : '') . '.csv';
 
         $headers = [
             'Content-Type'        => 'text/csv; charset=UTF-8',
@@ -93,20 +83,15 @@ class LaporanController extends Controller
             'Cache-Control'       => 'must-revalidate',
         ];
 
-        $callback = function () use ($pemesanans) {
+        return response()->stream(function () use ($pemesanans) {
             $handle = fopen('php://output', 'w');
-
-            // BOM untuk Excel agar baca UTF-8 dengan benar
             fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
-
-            // Header baris
             fputcsv($handle, [
                 'ID', 'Pelanggan', 'Email', 'No HP',
                 'Mobil', 'Merek', 'Plat Nomor',
                 'Tgl Mulai', 'Tgl Selesai', 'Durasi (hari)',
                 'Total Harga (Rp)', 'Status', 'Catatan', 'Tgl Dibuat',
             ]);
-
             foreach ($pemesanans as $p) {
                 fputcsv($handle, [
                     $p->id,
@@ -118,50 +103,21 @@ class LaporanController extends Controller
                     $p->mobil->plat_nomor ?? '-',
                     $p->tanggal_mulai->format('d/m/Y'),
                     $p->tanggal_selesai->format('d/m/Y'),
-                    $p->durasiHari(),
+                    $p->tanggal_mulai->diffInDays($p->tanggal_selesai),
                     number_format($p->total_harga, 0, ',', '.'),
                     $p->status,
                     $p->catatan ?? '',
                     $p->created_at->format('d/m/Y H:i'),
                 ]);
             }
-
             fclose($handle);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        }, 200, $headers);
     }
 
-    /**
-     * Invoice PDF untuk satu pemesanan (user & admin)
-     */
-    public function invoicePdf(Pemesanan $pemesanan)
-    {
-        // Hanya pemilik atau admin
-        if (auth()->user()->role !== 'admin' && $pemesanan->user_id !== auth()->id()) {
-            abort(403);
-        }
-
-        $pemesanan->load(['user', 'mobil']);
-
-        $html = view('admin.laporan.invoice-pdf', compact('pemesanan'))->render();
-
-        // Gunakan DomPDF (barryvdh/laravel-dompdf)
-        $pdf = app('dompdf.wrapper');
-        $pdf->loadHTML($html);
-        $pdf->setPaper('A4', 'portrait');
-
-        $filename = 'invoice-' . str_pad($pemesanan->id, 5, '0', STR_PAD_LEFT) . '.pdf';
-
-        return $pdf->download($filename);
-    }
-
-    /**
-     * Data chart JSON (opsional: untuk AJAX refresh tanpa reload)
-     */
     public function chartData(Request $request)
     {
-        $tahun = $request->get('tahun', now()->year);
+        $tahun     = $request->get('tahun', now()->year);
+        $namaBulan = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
         $data = Pemesanan::selectRaw('MONTH(updated_at) as bulan, SUM(total_harga) as total')
             ->where('status', 'selesai')
@@ -171,15 +127,65 @@ class LaporanController extends Controller
             ->get()
             ->keyBy('bulan');
 
-        $namaBulan = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         $result = [];
         for ($i = 1; $i <= 12; $i++) {
-            $result[] = [
-                'bulan' => $namaBulan[$i],
-                'total' => (int) ($data[$i]->total ?? 0),
-            ];
+            $result[] = ['bulan' => $namaBulan[$i], 'total' => (int) ($data[$i]->total ?? 0)];
         }
 
         return response()->json($result);
+    }
+
+    public function penarikan()
+    {
+        $totalPendapatan   = Pemesanan::where('status', 'selesai')->sum('total_harga');
+        $totalDitarik      = Penarikan::where('status', 'selesai')->sum('jumlah');
+        $saldoTersedia     = $totalPendapatan - $totalDitarik;
+        $penarikanBulanIni = Penarikan::whereMonth('created_at', now()->month)
+                                ->whereYear('created_at', now()->year)
+                                ->count();
+        $riwayatPenarikan  = Penarikan::latest()->paginate(15);
+
+        return view('admin.laporan.penarikan', compact(
+            'saldoTersedia', 'totalPendapatan',
+            'totalDitarik', 'penarikanBulanIni', 'riwayatPenarikan'
+        ));
+    }
+
+    public function penarikanStore(Request $request)
+    {
+        $totalPendapatan = Pemesanan::where('status', 'selesai')->sum('total_harga');
+        $totalDitarik    = Penarikan::where('status', 'selesai')->sum('jumlah');
+        $saldoTersedia   = $totalPendapatan - $totalDitarik;
+
+        $request->validate([
+            'jumlah'     => "required|numeric|min:50000|max:{$saldoTersedia}",
+            'rekening'   => 'required|string|max:100',
+            'keterangan' => 'nullable|string|max:255',
+        ]);
+
+        Penarikan::create([
+            'jumlah'     => $request->jumlah,
+            'rekening'   => $request->rekening,
+            'keterangan' => $request->keterangan,
+            'status'     => 'pending',
+        ]);
+
+        return redirect()->route('admin.laporan.penarikan')
+            ->with('success', 'Pengajuan penarikan berhasil diajukan!');
+    }
+
+    public function invoicePdf(Pemesanan $pemesanan)
+    {
+        if (auth()->user()->role !== 'admin' && $pemesanan->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $pemesanan->load(['user', 'mobil']);
+        $html = view('admin.laporan.invoice-pdf', compact('pemesanan'))->render();
+
+        $pdf = app('dompdf.wrapper');
+        $pdf->loadHTML($html)->setPaper('A4', 'portrait');
+
+        return $pdf->download('invoice-' . str_pad($pemesanan->id, 5, '0', STR_PAD_LEFT) . '.pdf');
     }
 }

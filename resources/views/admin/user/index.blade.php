@@ -1,25 +1,9 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pelanggan — Admin</title>
-    @vite(['resources/css/dashboard.css'])
-</head>
-<body>
+@extends('layouts.admin')
+@section('title', 'Manajemen User')
+@section('page-title', 'Manajemen User')
 
-<nav class="nav">
-    <button onclick="window.location.href='{{ route('admin.dashboard') }}'"
-        style="background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;color:var(--gray-700);">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <path d="M19 12H5M12 5l-7 7 7 7"/>
-        </svg>
-    </button>
-    <div class="nav-brand" style="font-size:16px;">Pelanggan</div>
-    <div style="width:36px;"></div>
-</nav>
-
-<div class="content" style="padding:16px 20px 100px;">
+@section('content')
+<div class="admin-content">
 
     @if (session('success'))
         <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--radius-md);padding:12px 14px;font-size:13px;font-weight:600;color:#16a34a;margin-bottom:16px;">
@@ -209,47 +193,29 @@
     @endif
 
 </div>
-
-@if(Auth::user()->role === 'admin')
-    @include('admin.partials.bottom-nav')
-@else
-    @include('users.partials.bottom-nav')
-@endif
+@push('scripts')
 <script>
 let activeTab = 'semua';
-
 function filterTab(tab, el) {
     activeTab = tab;
     document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
     applyFilters();
 }
-
-function filterUsers() {
-    applyFilters();
-}
-
+function filterUsers() { applyFilters(); }
 function applyFilters() {
     const keyword = document.getElementById('search-input').value.toLowerCase().trim();
     const cards   = document.querySelectorAll('.user-card');
     let visible   = 0;
-
     cards.forEach(card => {
-        const matchTab    = activeTab === 'semua'
-            || (activeTab === 'aktif' && card.dataset.aktif === 'ya')
-            || (activeTab === 'baru'  && card.dataset.baru  === 'ya');
-        const matchSearch = !keyword
-            || card.dataset.nama.includes(keyword)
-            || card.dataset.email.includes(keyword);
-
+        const matchTab    = activeTab === 'semua' || (activeTab === 'aktif' && card.dataset.aktif === 'ya') || (activeTab === 'baru' && card.dataset.baru === 'ya');
+        const matchSearch = !keyword || card.dataset.nama.includes(keyword) || card.dataset.email.includes(keyword);
         const show = matchTab && matchSearch;
         card.style.display = show ? '' : 'none';
         if (show) visible++;
     });
-
     document.getElementById('empty-search').style.display = visible === 0 ? 'block' : 'none';
 }
 </script>
-
-</body>
-</html>
+@endpush
+@endsection

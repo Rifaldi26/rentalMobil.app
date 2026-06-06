@@ -56,8 +56,8 @@
     </a>
 
     {{-- Profil --}}
-    <a href="{{ route('admin.profil') }}"
-       class="nav-item {{ request()->routeIs('admin.profil') ? 'active' : '' }}"
+    <a href="{{ route('profile.edit') }}"
+       class="nav-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}"
        style="text-decoration:none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="8" r="4"/>

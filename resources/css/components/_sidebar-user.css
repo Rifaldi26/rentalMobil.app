@@ -1,0 +1,146 @@
+/* =============================================================
+   SIDEBAR USER — Light sidebar untuk halaman pelanggan
+   Desktop only — mobile pakai bottom-nav
+   ============================================================= */
+
+/* ── Shell ───────────────────────────────────────────────── */
+.user-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--user-sidebar-w);
+  background: var(--sidebar-light-bg);
+  border-right: 1px solid var(--sidebar-light-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+  padding: 24px 16px;
+  transition: width var(--transition-spring);
+  overflow: hidden;
+}
+
+/* ── Brand ───────────────────────────────────────────────── */
+.user-sidebar-brand {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--brand-400);
+  letter-spacing: -.5px;
+  margin-bottom: 32px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.user-sidebar-brand span { color: var(--accent-500); }
+
+/* ── Toggle button ───────────────────────────────────────── */
+.user-sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--gray-500);
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.user-sidebar-toggle:hover { background: var(--gray-100); color: var(--gray-900); }
+
+/* ── Nav ─────────────────────────────────────────────────── */
+.user-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.user-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sidebar-light-text);
+  text-decoration: none;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.user-nav-link svg { width: 20px; height: 20px; flex-shrink: 0; }
+.user-nav-link:hover { background: var(--sidebar-light-hover); color: var(--gray-900); }
+.user-nav-link.active {
+  background: var(--sidebar-light-active-bg);
+  color: var(--sidebar-light-active-text);
+}
+
+/* ── CTA Box ─────────────────────────────────────────────── */
+.user-sidebar-cta {
+  background: linear-gradient(135deg, var(--brand-600), var(--brand-900));
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  color: var(--white);
+  margin-top: 16px;
+}
+.user-sidebar-cta-sub   { font-size: 12px; opacity: .8; margin-bottom: 4px; }
+.user-sidebar-cta-title { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+.user-sidebar-cta-btn {
+  display: inline-block;
+  background: var(--accent-500);
+  color: var(--white);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* ── Collapsed state ─────────────────────────────────────── */
+.user-sidebar.collapsed { width: var(--user-sidebar-collapsed-w); }
+
+.user-sidebar.collapsed .user-sidebar-brand,
+.user-sidebar.collapsed .user-nav-link-label,
+.user-sidebar.collapsed .user-sidebar-cta { display: none; }
+
+.user-sidebar.collapsed .user-nav-link {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+/* Tooltip saat collapsed */
+.user-sidebar.collapsed .user-nav-link::after {
+  content: attr(data-label);
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--gray-900);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+  z-index: 300;
+}
+.user-sidebar.collapsed .user-nav-link:hover::after { opacity: 1; }
+
+
+/* =============================================================
+   RESPONSIVE — User sidebar hanya muncul di desktop
+   ============================================================= */
+
+@media (max-width: 1023px) {
+  .user-sidebar { display: none !important; }
+}

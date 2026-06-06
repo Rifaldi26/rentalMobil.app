@@ -1,0 +1,152 @@
+/* =============================================================
+   BUTTON — Semua variasi tombol
+   ============================================================= */
+
+/* ── Base ────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.btn:hover   { opacity: .88; }
+.btn:active  { transform: scale(.97); }
+.btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Variant ─────────────────────────────────────────────── */
+.btn-primary   { background: var(--brand-400);  color: var(--white); }
+.btn-secondary { background: var(--gray-100);   color: var(--gray-700); border: 1.5px solid var(--gray-200); }
+.btn-danger    { background: var(--danger);      color: var(--white); }
+.btn-success   { background: var(--success);     color: var(--white); }
+.btn-outline   { background: transparent; color: var(--brand-400); border: 1.5px solid var(--brand-400); }
+
+.btn-primary:hover   { opacity: 1; background: var(--brand-600); }
+.btn-secondary:hover { opacity: 1; background: var(--gray-200); }
+
+/* ── Size ────────────────────────────────────────────────── */
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-lg { padding: 13px 28px; font-size: 15px; }
+.btn-full { width: 100%; }
+
+/* ── Icon-only ───────────────────────────────────────────── */
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--gray-100);
+  color: var(--gray-700);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.btn-icon:hover { background: var(--gray-200); }
+
+/* ── Table action buttons ────────────────────────────────── */
+.btn-edit   { background: var(--brand-50);  color: var(--brand-400); }
+.btn-delete { background: var(--danger-bg); color: var(--danger); }
+.btn-view   { background: var(--gray-100);  color: var(--gray-700); }
+
+.btn-edit, .btn-delete, .btn-view {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-edit:hover, .btn-delete:hover, .btn-view:hover { opacity: .75; }
+
+/* ── Confirm / Reject (booking actions) ──────────────────── */
+.btn-confirm, .btn-reject {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+  width: 100%;
+}
+.btn-confirm { background: var(--success-bg); color: var(--success); }
+.btn-reject  { background: var(--danger-bg);  color: var(--danger); }
+.btn-confirm:hover, .btn-reject:hover { opacity: .75; }
+
+/* ── Pesan / Submit CTA ──────────────────────────────────── */
+.btn-pesan {
+  padding: 14px 28px;
+  background: var(--brand-400);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+  white-space: nowrap;
+}
+.btn-pesan:hover    { background: var(--brand-600); }
+.btn-pesan:active   { transform: scale(.98); }
+.btn-pesan:disabled { background: var(--gray-300); cursor: not-allowed; transform: none; }
+
+/* ── Book (car card) ─────────────────────────────────────── */
+.btn-book {
+  background: var(--brand-400);
+  color: var(--white);
+  border: none;
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.btn-book:hover { background: var(--brand-600); }
+
+/* ── Search button ───────────────────────────────────────── */
+.btn-search {
+  width: 100%;
+  background: var(--brand-400);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 14px;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+.btn-search:active { transform: scale(.98); background: var(--brand-600); }

@@ -42,4 +42,33 @@ class Pemesanan extends Model
     {
         return $this->tanggal_mulai->diffInDays($this->tanggal_selesai);
     }
+    // Tambahkan di dalam class Pemesanan
+
+/**
+ * CSS class untuk badge status.
+ */
+    public function getStatusClassAttribute(): string
+    {
+        return match($this->status) {
+            'dikonfirmasi' => 'status-progress',
+            'pending'      => 'status-pending',
+            'selesai'      => 'status-confirmed',
+            'dibatalkan'   => 'status-cancelled',
+            default        => '',
+        };
+    }
+
+    /**
+     * Label teks untuk status.
+     */
+    public function getStatusLabelAttribute(): string
+    {
+        return match($this->status) {
+            'dikonfirmasi' => 'Berjalan',
+            'pending'      => 'Menunggu',
+            'selesai'      => 'Selesai',
+            'dibatalkan'   => 'Dibatalkan',
+            default        => $this->status,
+        };
+    }
 }

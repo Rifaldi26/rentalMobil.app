@@ -64,6 +64,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Favorit::class);
     }
 
+    // Relasi: pesan yang dikirim user ini
+    public function pesanTerkirim()
+    {
+        return $this->hasMany(\App\Models\Pesan::class, 'pengirim_id');
+    }
+
+    // Relasi: pesan yang diterima user ini
+    public function pesanDiterima()
+    {
+        return $this->hasMany(\App\Models\Pesan::class, 'penerima_id');
+    }
     // Helper: cek apakah user ini sudah memfavoritkan mobil tertentu
     public function hasFavorited(int $mobilId): bool
     {

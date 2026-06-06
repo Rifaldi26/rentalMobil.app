@@ -1,0 +1,97 @@
+/* =============================================================
+   LAYOUT ADMIN — Wrapper main content, header, grid
+   ============================================================= */
+
+/* Pastikan body admin pakai flex */
+body.page-admin {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Main Content Area ───────────────────────────────────── */
+.admin-main {
+  flex: 1;
+  margin-left: var(--admin-sidebar-w);
+  min-height: 100vh;
+  transition: margin-left var(--transition-spring);
+}
+
+/* Saat sidebar collapsed */
+body.page-admin:has(.admin-sidebar.collapsed) .admin-main {
+  margin-left: var(--admin-sidebar-collapsed-w);
+}
+
+/* ── Page Header ─────────────────────────────────────────── */
+.admin-topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-100);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.admin-page-title    { font-size: 20px; font-weight: 800; color: var(--gray-900); }
+.admin-page-subtitle { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+
+.admin-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Content padding ─────────────────────────────────────── */
+.admin-content {
+  padding: 28px 32px;
+}
+
+/* ── Stats Grid ──────────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 1280px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+
+/* =============================================================
+   RESPONSIVE ADMIN LAYOUT
+   ============================================================= */
+
+/* Mobile (< 768px) */
+@media (max-width: 767px) {
+  .admin-main {
+    margin-left: var(--admin-sidebar-collapsed-w);
+  }
+  .admin-topbar  { padding: 12px 16px; }
+  .admin-content { padding: 16px; }
+  .stats-grid    { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .admin-page-title { font-size: 17px; }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .admin-main {
+    margin-left: var(--admin-sidebar-collapsed-w);
+  }
+  .admin-topbar  { padding: 14px 24px; }
+  .admin-content { padding: 20px 24px; }
+  .stats-grid    { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Desktop (≥ 1024px) */
+@media (min-width: 1024px) {
+  .admin-main { margin-left: var(--admin-sidebar-w); }
+
+  body.page-admin:has(.admin-sidebar.collapsed) .admin-main {
+    margin-left: var(--admin-sidebar-collapsed-w);
+  }
+}

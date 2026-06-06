@@ -1,0 +1,88 @@
+/* =============================================================
+   BADGE — Status label, plat, notif counter
+   ============================================================= */
+
+/* ── Base ────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  border: none;
+}
+
+/* ── Status Pemesanan ────────────────────────────────────── */
+.badge-pending      { background: #fef9c3; color: #854d0e; }
+.badge-dikonfirmasi { background: var(--brand-50);   color: var(--brand-400); }
+.badge-berjalan     { background: var(--brand-50);   color: var(--brand-400); }
+.badge-selesai      { background: var(--success-bg); color: var(--success); }
+.badge-dibatalkan   { background: var(--gray-100);   color: var(--gray-500); }
+.badge-ditolak      { background: var(--danger-bg);  color: var(--danger); }
+
+/* ── Status Kendaraan ────────────────────────────────────── */
+.badge-tersedia { background: var(--success-bg); color: var(--success); }
+.badge-disewa   { background: var(--danger-bg);  color: var(--danger); }
+.badge-servis   { background: var(--warning-bg); color: var(--warning); }
+
+/* ── Plat Nomor ──────────────────────────────────────────── */
+.badge-plat {
+  background: var(--gray-100);
+  color: var(--gray-700);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: .5px;
+}
+
+/* ── Notification counter ────────────────────────────────── */
+.badge-notif {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 10px;
+  height: 10px;
+  background: var(--danger);
+  border-radius: 50%;
+  border: 2px solid var(--white);
+}
+
+.badge-count {
+  background: var(--danger);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* ── Promo / Label ───────────────────────────────────────── */
+.badge-new {
+  background: var(--accent-100);
+  color: var(--accent-500);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* ── Car type badges ─────────────────────────────────────── */
+.badge-car {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--brand-400);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+.badge-car.driver { background: var(--accent-500); }
+.badge-car.promo  { background: var(--success); }
