@@ -10,18 +10,21 @@
         <span>Rental</span>Mobil
     </div>
 
-    {{-- Toggle Button --}}
+    {{-- Toggle Button — onclick wajib ada agar collapse berfungsi di desktop --}}
     <button class="admin-sidebar-toggle" id="admin-sidebar-toggle"
-            onclick="toggleAdminSidebar()" aria-label="Toggle sidebar">
+            onclick="toggleAdminSidebar()"
+            aria-label="Toggle sidebar">
         <svg id="admin-icon-open" width="18" height="18" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" y1="6" x2="21" y2="6"/>
             <line x1="3" y1="12" x2="21" y2="12"/>
             <line x1="3" y1="18" x2="21" y2="18"/>
         </svg>
         <svg id="admin-icon-close" width="18" height="18" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-             style="display:none;">
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round"
+             class="hidden">
             <line x1="18" y1="6" x2="6" y2="18"/>
             <line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
@@ -45,8 +48,7 @@
         </a>
 
         <a href="{{ route('admin.pemesanan.index') }}" data-label="Pemesanan"
-           class="admin-nav-link {{ request()->routeIs('admin.pemesanan.*') ? 'active' : '' }}"
-           style="position:relative;">
+           class="admin-nav-link admin-nav-link--rel {{ request()->routeIs('admin.pemesanan.*') ? 'active' : '' }}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                  stroke-linecap="round" stroke-linejoin="round">
                 <rect width="18" height="18" x="3" y="4" rx="2"/>
@@ -114,6 +116,7 @@
             </svg>
             <span class="admin-nav-link-label">Laporan Keuangan</span>
         </a>
+
         {{-- ── PENGATURAN ── --}}
         <div class="admin-nav-label">Pengaturan</div>
 

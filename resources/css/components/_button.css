@@ -150,3 +150,13 @@
   transition: background var(--transition-fast), transform var(--transition-fast);
 }
 .btn-search:active { transform: scale(.98); background: var(--brand-600); }
+/* =============================================================
+   BUTTON LEGACY ALIASES
+   ============================================================= */
+/* btn-danger-soft dipakai di mobil/index.blade.php */
+.btn-danger-soft {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-border);
+}
+.btn-danger-soft:hover { opacity: 1; background: #fecaca; }

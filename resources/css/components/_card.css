@@ -1,5 +1,6 @@
 /* =============================================================
-   CARD — Semua variasi card
+   CARD — Base card, stat card, booking card, mobil card
+   Filter chips, section header
    ============================================================= */
 
 /* ── Base ────────────────────────────────────────────────── */
@@ -15,57 +16,89 @@
 .card-body-sm { padding: 14px 16px; }
 .card-body-lg { padding: 28px; }
 
-/* ── Stat Card (dashboard) ───────────────────────────────── */
+/* Modifiers */
+.card--mb            { margin-bottom: 20px; }
+.card-body--table    { padding: 0; overflow-x: auto; }
+.card-body--col      { display: flex; flex-direction: column; gap: 10px; }
+.card-body--gap-md   { gap: 12px; }
+.card-body--center   { text-align: center; padding: 28px; }
+.card-header--between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-header__title { font-size: 15px; font-weight: 700; }
+.card-header__meta  { font-size: 12px; color: var(--gray-500); }
+
+/* ── Stat Card — Admin dashboard ─────────────────────────── */
 .stat-card {
-  background: var(--white);
+  display: block;
+  text-decoration: none;
   border-radius: var(--radius-md);
-  border: 1px solid var(--gray-100);
   padding: 20px;
 }
 
-.stat-card.highlight {
-  background: linear-gradient(135deg, #1d4ed8 0%, var(--brand-400) 100%);
-  border-color: transparent;
+.stat-card--primary {
+  background: linear-gradient(135deg, #1d4ed8, var(--brand-400));
 }
-.stat-card.highlight .stat-label { color: rgba(255,255,255,.75); }
-.stat-card.highlight .stat-value { color: var(--white); }
-.stat-card.highlight .stat-sub   { color: rgba(255,255,255,.6); }
+.stat-card--white {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+}
 
-.stat-label {
+.stat-card__label {
   font-size: 11px;
   font-weight: 700;
-  color: var(--gray-500);
   text-transform: uppercase;
   letter-spacing: .5px;
   margin-bottom: 6px;
 }
+.stat-card--primary .stat-card__label { color: rgba(255,255,255,.70); }
+.stat-card--white   .stat-card__label { color: var(--gray-500); }
 
-.stat-value {
-  font-size: 26px;
+.stat-card__value {
+  font-size: 24px;
   font-weight: 800;
-  color: var(--gray-900);
-  line-height: 1;
-  margin-bottom: 4px;
+  color: var(--white);
 }
+.stat-card__value--dark { color: var(--gray-900); }
 
-.stat-sub {
-  font-size: 12px;
-  color: var(--gray-500);
+.stat-card__sub { font-size: 12px; margin-top: 4px; }
+.stat-card--primary .stat-card__sub { color: rgba(255,255,255,.60); }
+.stat-card--white   .stat-card__sub { color: var(--gray-500); }
+
+.stat-card__sub--warning { color: var(--accent-500); font-weight: 700; }
+.stat-card__sub--success { color: var(--success); }
+.stat-card__sub--danger  { color: var(--danger); }
+
+/* ── Stat Card — Small (mobil/user/jadwal page) ──────────── */
+.stat-card--sm {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  text-align: center;
 }
+.stat-card--sm-success { background: var(--success-bg); border-color: var(--success-border); }
+.stat-card--sm-danger  { background: var(--danger-bg);  border-color: var(--danger-border); }
 
-/* ── Stat Icon variant ───────────────────────────────────── */
-.stat-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
-}
+.stat-card--sm .stat-card__value      { font-size: 22px; color: var(--gray-900); }
+.stat-card--sm-success .stat-card__value { color: var(--success); }
+.stat-card--sm-danger  .stat-card__value { color: var(--danger); }
 
-/* ── Booking Item Card ───────────────────────────────────── */
+.stat-card--sm .stat-card__label { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+
+/* Stat grid containers */
+.stat-grid          { display: grid; gap: 10px; }
+.stat-grid--2       { grid-template-columns: 1fr 1fr; }
+.stat-grid--3       { grid-template-columns: 1fr 1fr 1fr; }
+
+/* Stat value modifiers */
+.stat-value--sm      { font-size: 16px; }
+.stat-value--success { color: var(--success); }
+.stat-value--danger  { color: var(--danger); }
+
+/* ── Booking Item Card ────────────────────────────────────── */
 .booking-item {
   background: var(--white);
   border: 1px solid var(--gray-100);
@@ -97,11 +130,53 @@
 .booking-item-footer {
   display: flex;
   gap: 8px;
+  margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid var(--gray-100);
 }
+.booking-item-action { margin-top: 8px; }
 
-/* ── Car Card (user) ─────────────────────────────────────── */
+.booking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── Mobil Card (list item) ──────────────────────────────── */
+.mobil-card {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+.mobil-card__main {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.mobil-card__thumb {
+  width: 80px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mobil-card__img         { width: 100%; height: 100%; object-fit: cover; }
+.mobil-card__icon        { font-size: 28px; }
+.mobil-card__info        { flex: 1; min-width: 0; }
+.mobil-card__nama        { font-size: 14px; font-weight: 700; color: var(--gray-900); }
+.mobil-card__meta        { font-size: 12px; color: var(--gray-500); margin-top: 1px; }
+.mobil-card__harga       { font-size: 14px; font-weight: 800; color: var(--brand-400); margin-top: 4px; }
+.mobil-card__harga-unit  { font-size: 11px; font-weight: 500; color: var(--gray-500); }
+.mobil-card__toggle-form { flex-shrink: 0; }
+.mobil-card__desc        { font-size: 12px; color: var(--gray-500); margin-top: 8px; line-height: 1.5; }
+.mobil-card__actions     { display: flex; gap: 8px; margin-top: 10px; }
+
+/* ── Car Card (user-facing) ──────────────────────────────── */
 .car-card {
   background: var(--white);
   border-radius: var(--radius-lg);
@@ -120,11 +195,7 @@
   overflow: hidden;
   background: var(--gray-100);
 }
-.car-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.car-image { width: 100%; height: 100%; object-fit: cover; }
 .car-image-placeholder {
   width: 100%;
   height: 100%;
@@ -153,35 +224,11 @@
 .car-wishlist:active    { transform: scale(.88); }
 .car-wishlist.wishlisted { background: #fee2e2; }
 
-.car-body { padding: 14px 16px 16px; }
-.car-name {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--gray-900);
-  margin-bottom: 2px;
-}
-.car-sub {
-  font-size: 12px;
-  color: var(--gray-500);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.car-specs {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-.spec-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  color: var(--gray-600);
-  font-weight: 500;
-}
+.car-body   { padding: 14px 16px 16px; }
+.car-name   { font-size: 16px; font-weight: 700; color: var(--gray-900); margin-bottom: 2px; }
+.car-sub    { font-size: 12px; color: var(--gray-500); margin-bottom: 12px; display: flex; align-items: center; gap: 4px; }
+.car-specs  { display: flex; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.spec-item  { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--gray-600); font-weight: 500; }
 .car-footer {
   display: flex;
   align-items: center;
@@ -189,22 +236,36 @@
   padding-top: 12px;
   border-top: 1px solid var(--gray-100);
 }
-.car-price {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--brand-400);
-  letter-spacing: -.5px;
-}
+.car-price      { font-size: 18px; font-weight: 800; color: var(--brand-400); letter-spacing: -.5px; }
 .car-price-unit { font-size: 11px; color: var(--gray-500); font-weight: 500; }
-.car-rating {
+.car-rating     { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: var(--gray-700); }
+.car-rating svg { width: 14px; height: 14px; }
+
+/* ── Filter Chips ────────────────────────────────────────── */
+.filter-chips {
   display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.filter-chip {
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
   font-size: 13px;
   font-weight: 600;
-  color: var(--gray-700);
+  color: var(--gray-600);
+  background: var(--gray-100);
+  border: 1.5px solid transparent;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
 }
-.car-rating svg { width: 14px; height: 14px; }
+.filter-chip:hover  { background: var(--gray-200); color: var(--gray-800); }
+.filter-chip.active { background: var(--brand-50); color: var(--brand-400); border-color: var(--brand-400); }
 
 /* ── Section header ──────────────────────────────────────── */
 .section-header {
@@ -213,11 +274,8 @@
   justify-content: space-between;
   margin-bottom: 14px;
 }
-.section-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--gray-900);
-}
+.section-title     { font-size: 17px; font-weight: 700; color: var(--gray-900); }
+.section-title--mb { margin-bottom: 14px; }
 .see-all {
   font-size: 13px;
   color: var(--brand-400);
@@ -227,176 +285,87 @@
   cursor: pointer;
   text-decoration: none;
 }
-/* ── Mobil Card ──────────────────────────────────── */
-.mobil-card {
-    background: #fff;
-    border: 1px solid var(--gray-100);
-    border-radius: var(--radius-md);
-    padding: 14px;
+
+/* =============================================================
+   STAT CARD LEGACY ALIASES
+   Class .stat-label / .stat-value / .stat-sub / .highlight
+   masih dipakai oleh jadwal/index.blade.php dan dashboard.blade.php
+   ============================================================= */
+
+/* Dipakai di jadwal & dashboard stat cards tanpa modifier */
+.stat-card .stat-label,
+.stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 6px;
+}
+.stat-card .stat-value,
+.stat-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--gray-900);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-card .stat-sub,
+.stat-sub {
+  font-size: 12px;
+  color: var(--gray-500);
 }
 
-.mobil-card__main {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
+/* Variant highlight (dashboard jadwal — card biru) */
+.stat-card.highlight {
+  background: linear-gradient(135deg, #1d4ed8 0%, var(--brand-400) 100%);
+  border-color: transparent;
+  border: none;
+}
+.stat-card.highlight .stat-label { color: rgba(255,255,255,.75); }
+.stat-card.highlight .stat-value { color: var(--white); }
+.stat-card.highlight .stat-sub   { color: rgba(255,255,255,.60); }
+
+/* Stat-card plain (jadwal/mobil — tanpa warna background) */
+.stat-card:not(.highlight):not(.stat-card--primary):not(.stat-card--white)
+  :not(.stat-card--sm):not(.stat-card--sm-success):not(.stat-card--sm-danger) {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-md);
+  padding: 20px;
 }
 
-.mobil-card__thumb {
-    width: 80px;
-    height: 64px;
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    flex-shrink: 0;
-    background: var(--gray-100);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Alias warna untuk stat card kecil di mobil index */
+.stat-card.stat-card--success {
+  background: var(--success-bg);
+  border: 1px solid var(--success-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  text-align: center;
 }
+.stat-card.stat-card--success .stat-card__value,
+.stat-card.stat-card--success .stat-value { color: var(--success); }
 
-.mobil-card__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.stat-card.stat-card--danger {
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  text-align: center;
 }
+.stat-card.stat-card--danger .stat-card__value,
+.stat-card.stat-card--danger .stat-value { color: var(--danger); }
 
-.mobil-card__icon {
-    font-size: 28px;
-}
-
-.mobil-card__info {
-    flex: 1;
-    min-width: 0;
-}
-
-.mobil-card__nama {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--gray-900);
-}
-
-.mobil-card__meta {
-    font-size: 12px;
-    color: var(--gray-500);
-    margin-top: 1px;
-}
-
-.mobil-card__harga {
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--brand-400);
-    margin-top: 4px;
-}
-
-.mobil-card__harga-unit {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--gray-500);
-}
-
-.mobil-card__toggle-form {
-    flex-shrink: 0;
-}
-
-.mobil-card__desc {
-    font-size: 12px;
-    color: var(--gray-500);
-    margin-top: 8px;
-    line-height: 1.5;
-}
-
-.mobil-card__actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-}
-
-/* ── Stat Grid ──────────────────────────────────────── */
-.stat-grid {
-    display: grid;
-    gap: 10px;
-}
-
-.stat-grid--3 { grid-template-columns: 1fr 1fr 1fr; }
-
-.stat-card {
-    background: #fff;
+/* =============================================================
+   STAT-GRID — plain card (dipakai di mobil index)
+   stat-card tanpa modifier → tampil sebagai plain white card
+   ============================================================= */
+.stat-grid > .stat-card {
+    background: var(--white);
     border: 1px solid var(--gray-100);
     border-radius: var(--radius-md);
     padding: 14px;
     text-align: center;
 }
-
-.stat-card--success {
-    background: #f0fdf4;
-    border-color: #bbf7d0;
-}
-
-.stat-card--danger {
-    background: #fef2f2;
-    border-color: #fecaca;
-}
-
-.stat-card__value {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--gray-900);
-}
-
-.stat-card--success .stat-card__value { color: #16a34a; }
-.stat-card--danger  .stat-card__value { color: #dc2626; }
-
-.stat-card__label {
-    font-size: 11px;
-    color: var(--gray-500);
-    margin-top: 2px;
-}
-
-/* ── Filter Chips ───────────────────────────────────── */
-.filter-chips {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-bottom: 2px;
-}
-.filter-chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 14px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--gray-600);
-    background: var(--gray-100);
-    border: 1.5px solid transparent;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: all var(--transition-fast);
-}
-.filter-chip:hover {
-    background: var(--gray-200);
-    color: var(--gray-800);
-}
-.filter-chip.active {
-    background: #eff6ff;
-    color: var(--brand-400);
-    border-color: var(--brand-400);
-}
-/* ── Utility ────────────────────────────────────────── */
-.mb-10  { margin-bottom: 10px; }
-.mb-16  { margin-bottom: 16px; }
-.mb-20  { margin-bottom: 20px; }
-.mt-16  { margin-top: 16px; }
-.w-full { width: 100%; }
-.btn--flex { flex: 1; }
-
-.pagination-wrapper { margin-top: 16px; }
-
-.empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--gray-500);
-}
-
-.empty-state__icon  { font-size: 48px; margin-bottom: 12px; display: flex; justify-content: center; color: var(--gray-300); }
-.empty-state__title { font-weight: 600; font-size: 15px; }
+.stat-grid > .stat-card .stat-card__label { font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+.stat-grid > .stat-card .stat-card__value { font-size: 24px; font-weight: 800; color: var(--gray-900); }

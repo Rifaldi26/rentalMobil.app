@@ -1,6 +1,8 @@
+// ── Import Chart.js via npm (hapus CDN dari blade) ────────
+import Chart from 'chart.js/auto';
+
 /**
  * Admin Laporan — Chart pendapatan & distribusi status.
- * Requires Chart.js (di-load via @push('styles') di blade).
  */
 
 document.addEventListener('DOMContentLoaded', () => {

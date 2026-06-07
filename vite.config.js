@@ -7,6 +7,7 @@ export default defineConfig({
             input: ['resources/css/app.css', 
                 'resources/css/admin.css',
                 'resources/css/login.css',
+                'resources/css/dashboard.css',
                 'resources/js/app.js',
                 'resources/js/bootstrap.js',
                 'resources/js/dashboard.js',
@@ -18,6 +19,7 @@ export default defineConfig({
                 'resources/js/admin/sidebar.js',
                 'resources/js/admin/topbar.js',
                 'resources/js/admin/user.js',
+                'resources/js/admin/profile.js',
                 'resources/js/echo.js',
 
 

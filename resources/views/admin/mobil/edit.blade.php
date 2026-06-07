@@ -2,13 +2,11 @@
 @section('title', 'Edit Mobil')
 @section('page-title', 'Edit Mobil')
 
-@push('styles')
-    @vite(['resources/css/pemesanan.css'])
-@endpush
-
 @section('content')
 <div class="admin-content">
-    @include('admin.mobil._form')
+    <div class="mobil-form-wrap">
+        @include('admin.mobil._form')
+    </div>
 </div>
 @endsection
 

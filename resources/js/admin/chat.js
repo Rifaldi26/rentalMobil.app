@@ -4,16 +4,16 @@
 
 let chatLawanId = null;
 let echoChannel = null;
-const adminId   = window.adminUserId; // di-set dari blade
+const adminId   = window.adminUserId;
 
-// ── Helpers ─────────────────────────────────────────────────
-const getCsrf  = () => document.querySelector('meta[name="csrf-token"]').content;
+// ── Helpers ──────────────────────────────────────────────────
+const getCsrf     = () => document.querySelector('meta[name="csrf-token"]').content;
 const namaChannel = id => {
     const ids = [adminId, id].sort((a, b) => a - b);
     return `chat.${ids[0]}-${ids[1]}`;
 };
 
-// ── Filter search ────────────────────────────────────────────
+// ── Filter search ─────────────────────────────────────────────
 function filterChat() {
     const keyword = document.getElementById('search-input').value.toLowerCase().trim();
     let visible   = 0;
@@ -28,11 +28,11 @@ function filterChat() {
     if (el) el.style.display = visible === 0 ? 'block' : 'none';
 }
 
-// ── Buka / Tutup chat ────────────────────────────────────────
+// ── Buka / Tutup chat ─────────────────────────────────────────
 function bukaChat(lawanId, lawanNama, inisial) {
     chatLawanId = lawanId;
-    document.getElementById('chat-nama').textContent    = lawanNama;
-    document.getElementById('chat-avatar').textContent  = inisial;
+    document.getElementById('chat-nama').textContent   = lawanNama;
+    document.getElementById('chat-avatar').textContent = inisial;
     document.getElementById('modal-chat').classList.add('open');
 
     const badge = document.getElementById(`unread-${lawanId}`);
@@ -58,19 +58,20 @@ function tutupChat() {
     chatLawanId = null;
 }
 
-// ── Echo subscribe ───────────────────────────────────────────
+// ── Echo subscribe ────────────────────────────────────────────
 function subscribeChannel(lawanId) {
     if (echoChannel) window.Echo.leave(namaChannel(chatLawanId));
 
     echoChannel = window.Echo.private(namaChannel(lawanId))
         .listen('.pesan.baru', data => {
             if (chatLawanId === data.pengirim_id || chatLawanId === data.penerima_id) {
-                appendBubble(data.pengirim_id === adminId ? 'sent' : 'received', data.isi, data.waktu);
+                const arah = data.pengirim_id === adminId ? 'sent' : 'received';
+                appendBubble(arah, data.isi, data.waktu);
             }
         });
 }
 
-// ── Load riwayat ─────────────────────────────────────────────
+// ── Load riwayat ──────────────────────────────────────────────
 function muatRiwayat(lawanId) {
     const container = document.getElementById('chat-messages');
     container.innerHTML = '<div class="chat-loading">Memuat pesan...</div>';
@@ -91,19 +92,19 @@ function muatRiwayat(lawanId) {
     });
 }
 
-// ── Append bubble ────────────────────────────────────────────
+// ── Append bubble ─────────────────────────────────────────────
 function appendBubble(arah, isi, waktu) {
     const container = document.getElementById('chat-messages');
 
-    const wrap   = document.createElement('div');
-    wrap.className = `message-wrap message-wrap--${arah}`;
+    const wrap       = document.createElement('div');
+    wrap.className   = `bubble-wrap ${arah === 'sent' ? 'saya' : 'lawan'}`;
 
-    const bubble = document.createElement('div');
-    bubble.className  = `message-bubble ${arah}`;
+    const bubble     = document.createElement('div');
+    bubble.className = `bubble ${arah === 'sent' ? 'saya' : 'lawan'}`;
     bubble.textContent = isi;
 
-    const time = document.createElement('div');
-    time.className  = 'message-time';
+    const time       = document.createElement('div');
+    time.className   = 'bubble-time';
     time.textContent = waktu;
 
     wrap.appendChild(bubble);
@@ -112,7 +113,7 @@ function appendBubble(arah, isi, waktu) {
     scrollKeBawah();
 }
 
-// ── Kirim pesan ──────────────────────────────────────────────
+// ── Kirim pesan ───────────────────────────────────────────────
 function kirimPesan() {
     const input = document.getElementById('chat-input');
     const teks  = input.value.trim();
@@ -128,8 +129,12 @@ function kirimPesan() {
 
     fetch(`/chat/${chatLawanId}/kirim`, {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': getCsrf() },
-        body:    JSON.stringify({ isi: teks }),
+        headers: {
+            'Content-Type': 'application/json',
+            Accept:         'application/json',
+            'X-CSRF-TOKEN': getCsrf(),
+        },
+        body: JSON.stringify({ isi: teks }),
     }).catch(() => {});
 }
 
@@ -140,17 +145,52 @@ function updateChatPreview(lawanId, teks, waktu) {
     if (waktuEl)   waktuEl.textContent   = waktu;
 }
 
+// ── Textarea auto-resize ──────────────────────────────────────
 function handleChatInput(el) {
     el.style.height = 'auto';
     el.style.height = Math.min(el.scrollHeight, 100) + 'px';
     document.getElementById('btn-send').classList.toggle('active', el.value.trim().length > 0);
 }
 
-function enterKirim(e) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); kirimPesan(); }
-}
-
 function scrollKeBawah() {
     const el = document.getElementById('chat-messages');
     if (el) el.scrollTop = el.scrollHeight;
 }
+
+// ── DOM Ready ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Search
+    document.getElementById('search-input')
+        ?.addEventListener('input', filterChat);
+
+    // Chat list — delegasi event ke parent agar tidak loop @foreach
+    document.getElementById('chat-list')
+        ?.addEventListener('click', e => {
+            const item = e.target.closest('.chat-item');
+            if (!item) return;
+            bukaChat(
+                Number(item.dataset.id),
+                item.dataset.fullname,
+                item.dataset.inisial
+            );
+        });
+
+    // Tutup chat
+    document.getElementById('btn-tutup-chat')
+        ?.addEventListener('click', tutupChat);
+
+    // Textarea input & enter
+    const textarea = document.getElementById('chat-input');
+    textarea?.addEventListener('input', () => handleChatInput(textarea));
+    textarea?.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            kirimPesan();
+        }
+    });
+
+    // Send button
+    document.getElementById('btn-send')
+        ?.addEventListener('click', kirimPesan);
+});

@@ -1,0 +1,16 @@
+/* =============================================================
+   PAGE: JADWAL KENDARAAN
+   Filter & select widths tersedia di _form.css (.form-select--w160, --w110)
+   Stat cards ada di _card.css (.stat-card--sm)
+   ============================================================= */
+
+/* ── Table cell helpers ──────────────────────────────────── */
+.col-kendaraan { min-width: 180px; }
+
+.td-mobil-nama { font-weight: 700; font-size: 14px; color: var(--gray-900); }
+.td-mobil-meta { font-size: 12px; color: var(--gray-500); margin-top: 1px; }
+.td-aktif-nama { font-size: 13px; font-weight: 600; color: var(--brand-400); }
+.td-aktif-meta { font-size: 12px; color: var(--gray-500); }
+.td-none       { font-size: 13px; color: var(--gray-400); }
+.td-bebas      { font-size: 13px; color: var(--success); font-weight: 600; }
+.td-empty      { text-align: center; padding: 40px; color: var(--gray-400); }

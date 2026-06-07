@@ -1,0 +1,206 @@
+/* =============================================================
+   Profile Edit Page
+   ============================================================= */
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Avatar Card ─────────────────────────────────────────── */
+.profile-avatar-card {
+    background: #fff;
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-md);
+    padding: 28px 20px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+}
+
+.profile-avatar-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--brand-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--brand-600);
+    margin-bottom: 8px;
+}
+
+.profile-avatar-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.profile-avatar-email {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+.profile-avatar-role {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--brand-50, #eff6ff);
+    color: var(--brand-600);
+    border: 1px solid var(--brand-100, #dbeafe);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+
+/* ── Section Cards ───────────────────────────────────────── */
+.profile-section-card {
+    background: #fff;
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.profile-section-card:last-child {
+    margin-bottom: 0;
+}
+
+.profile-section-card--danger {
+    border-color: #fecaca;
+}
+
+.profile-section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+}
+
+.profile-section-title--danger {
+    color: #ef4444;
+}
+
+.profile-section-desc {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* ── Form Actions Row ────────────────────────────────────── */
+.profile-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ── Success Pill ────────────────────────────────────────── */
+.profile-success-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+}
+
+/* ── Delete Modal ────────────────────────────────────────── */
+.profile-delete-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .5);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.profile-delete-modal.open {
+    display: flex;
+}
+
+.profile-delete-modal__box {
+    background: #fff;
+    border-radius: var(--radius-md);
+    padding: 28px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+}
+
+.profile-delete-modal__icon {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.profile-delete-modal__title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-900);
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.profile-delete-modal__desc {
+    font-size: 13px;
+    color: var(--gray-500);
+    text-align: center;
+    line-height: 1.6;
+}
+
+.profile-delete-modal__actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.profile-delete-modal__actions .btn-cancel {
+    flex: 1;
+    padding: 12px;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.profile-delete-modal__actions .btn-confirm {
+    flex: 1;
+    padding: 12px;
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}

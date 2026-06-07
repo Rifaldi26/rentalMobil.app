@@ -6,19 +6,15 @@
 body.page-admin {
   display: flex;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* ── Main Content Area ───────────────────────────────────── */
 .admin-main {
   flex: 1;
-  margin-left: var(--admin-sidebar-w);
+  min-width: 0;
   min-height: 100vh;
   transition: margin-left var(--transition-spring);
-}
-
-/* Saat sidebar collapsed */
-body.page-admin:has(.admin-sidebar.collapsed) .admin-main {
-  margin-left: var(--admin-sidebar-collapsed-w);
 }
 
 /* ── Page Header ─────────────────────────────────────────── */
@@ -34,7 +30,11 @@ body.page-admin:has(.admin-sidebar.collapsed) .admin-main {
   top: 0;
   z-index: 100;
 }
-
+.admin-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 .admin-page-title    { font-size: 20px; font-weight: 800; color: var(--gray-900); }
 .admin-page-subtitle { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
 
@@ -61,37 +61,74 @@ body.page-admin:has(.admin-sidebar.collapsed) .admin-main {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* =============================================================
+   HAMBURGER BUTTON
+   Default disembunyikan — ditampilkan via media query mobile
+   Harus di sini (sebelum media query) agar urutan CSS benar
+   ============================================================= */
+
+.btn-hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--gray-600);
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+  margin-right: 4px;
+}
+.btn-hamburger:hover { background: var(--gray-100); }
+
+/* =============================================================
+   DRAWER BACKDROP
+   ============================================================= */
+
+.drawer-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 299;
+  backdrop-filter: blur(1px);
+}
+.drawer-backdrop.open { display: block; }
 
 /* =============================================================
    RESPONSIVE ADMIN LAYOUT
    ============================================================= */
 
-/* Mobile (< 768px) */
+/* ── Mobile (< 768px) ────────────────────────────────────── */
 @media (max-width: 767px) {
-  .admin-main {
-    margin-left: var(--admin-sidebar-collapsed-w);
-  }
-  .admin-topbar  { padding: 12px 16px; }
-  .admin-content { padding: 16px; }
-  .stats-grid    { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .admin-page-title { font-size: 17px; }
+  .admin-main           { margin-left: 0; width: 100%; }
+  .admin-topbar         { padding: 12px 16px; }
+  .admin-content        { padding: 16px; }
+  .stats-grid           { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .admin-page-title     { font-size: 17px; }
+  .admin-topbar-actions { gap: 8px; }
+
+  /* Hamburger tampil di mobile */
+  .btn-hamburger        { display: flex; }
 }
 
-/* Tablet (768px - 1023px) */
+/* ── Tablet (768px – 1023px) ─────────────────────────────── */
 @media (min-width: 768px) and (max-width: 1023px) {
-  .admin-main {
-    margin-left: var(--admin-sidebar-collapsed-w);
-  }
+  .admin-main    { margin-left: var(--admin-sidebar-collapsed-w); }
   .admin-topbar  { padding: 14px 24px; }
   .admin-content { padding: 20px 24px; }
   .stats-grid    { grid-template-columns: repeat(2, 1fr); }
+  .btn-hamburger { display: none; }
 }
 
-/* Desktop (≥ 1024px) */
+/* ── Desktop (≥ 1024px) ──────────────────────────────────── */
 @media (min-width: 1024px) {
   .admin-main { margin-left: var(--admin-sidebar-w); }
 
   body.page-admin:has(.admin-sidebar.collapsed) .admin-main {
     margin-left: var(--admin-sidebar-collapsed-w);
   }
+
+  .btn-hamburger { display: none; }
 }

@@ -1,100 +1,53 @@
 /* =============================================================
-   PAGE: ADMIN DASHBOARD — Stat cards, booking items, ringkasan
+   PAGE: ADMIN DASHBOARD
+   Hanya style khusus halaman ini. Komponen reusable (stat-card,
+   booking-item, empty-state, divider) ada di _card.css & _utilities.css
    ============================================================= */
 
-/* ── Greeting header ─────────────────────────────────────── */
-.dashboard-greeting {
-  margin-bottom: 24px;
-}
-.dashboard-greeting-name {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--gray-900);
-}
-.dashboard-greeting-sub {
-  font-size: 14px;
-  color: var(--gray-500);
-  margin-top: 2px;
-}
+/* ── Greeting ────────────────────────────────────────────── */
+.dashboard-greeting       { margin-bottom: 24px; }
+.dashboard-greeting-name  { font-size: 22px; font-weight: 800; color: var(--gray-900); }
+.dashboard-greeting-sub   { font-size: 14px; color: var(--gray-500); margin-top: 2px; }
 
-/* ── Stats Grid (4 kolom di dashboard) ───────────────────── */
-.dashboard-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 28px;
-}
+/* ── Stats Grid ──────────────────────────────────────────── */
+.dashboard-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+.dashboard-stats--mb { margin-bottom: 28px; }
 
-@media (max-width: 1280px) {
-  .dashboard-stats { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 767px) {
-  .dashboard-stats { grid-template-columns: 1fr 1fr; gap: 12px; }
-}
+@media (max-width: 1280px) { .dashboard-stats { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 767px)  { .dashboard-stats { grid-template-columns: 1fr 1fr; gap: 12px; } }
 
 /* ── Two-column content area ─────────────────────────────── */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  align-items: start;
-}
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
 
-@media (max-width: 1024px) {
-  .dashboard-grid { grid-template-columns: 1fr; }
-}
+@media (max-width: 1024px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
-/* ── Section title ───────────────────────────────────────── */
-.dashboard-section {
-  margin-bottom: 24px;
-}
+/* ── Section ─────────────────────────────────────────────── */
+.dashboard-section        { margin-bottom: 24px; }
 .dashboard-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 14px;
 }
-.dashboard-section-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--gray-900);
-}
-
-/* ── Booking list ─────────────────────────────────────────── */
-.booking-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+.dashboard-section-title  { font-size: 15px; font-weight: 700; color: var(--gray-900); }
 
 /* ── Ringkasan bulan ini ─────────────────────────────────── */
-.ringkasan-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.ringkasan-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-}
+.ringkasan-list { display: flex; flex-direction: column; gap: 12px; }
+.ringkasan-row  { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
 .ringkasan-row .label { color: var(--gray-500); }
 .ringkasan-row .value { font-weight: 700; color: var(--gray-900); }
-.ringkasan-divider {
-  height: 1px;
-  background: var(--gray-100);
-  margin: 4px 0;
-}
+.ringkasan-divider    { height: 1px; background: var(--gray-100); margin: 4px 0; }
 .ringkasan-total .label { font-weight: 700; color: var(--gray-900); }
 .ringkasan-total .value { color: var(--success); font-size: 16px; }
 
-/* ── Quick actions ───────────────────────────────────────── */
-.quick-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
+/* Alias lama (summary-row) — tetap kompatibel */
+.summary-row        { display: flex; justify-content: space-between; align-items: center; }
+.summary-row__label { font-size: 13px; color: var(--gray-500); }
+.summary-row__label--bold { font-size: 13px; font-weight: 700; }
+.summary-row__total { color: var(--success); font-size: 15px; }
+
+/* ── Quick Actions ───────────────────────────────────────── */
+.quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .quick-action {
   padding: 14px 16px;
   background: var(--white);
@@ -118,3 +71,7 @@
   background: var(--brand-50);
 }
 .quick-action-icon { font-size: 18px; }
+
+/* ── Misc helpers ────────────────────────────────────────── */
+.form-flex   { flex: 1; }
+.badge-count--warning { background: #fff7ed; color: var(--accent-500); }

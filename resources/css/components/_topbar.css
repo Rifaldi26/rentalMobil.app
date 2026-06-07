@@ -67,7 +67,7 @@
 
 
 /* =============================================================
-   BOTTOM NAV — Navigasi bawah untuk user (mobile)
+   BOTTOM NAV — Navigasi bawah (mobile)
    ============================================================= */
 
 .bottom-nav {
@@ -79,11 +79,12 @@
   background: var(--white);
   border-top: 1px solid var(--gray-100);
   display: flex;
-  z-index: 100;
+  z-index: 150;
   padding-bottom: env(safe-area-inset-bottom);
   box-shadow: 0 -2px 12px rgba(0, 0, 0, .06);
 }
 
+/* ── Item user (class lama) ──────────────────────────────── */
 .bottom-nav-item {
   flex: 1;
   display: flex;
@@ -105,7 +106,30 @@
 .bottom-nav-item.active { color: var(--brand-400); }
 .bottom-nav-item svg    { width: 22px; height: 22px; }
 
-/* ── Center FAB button ───────────────────────────────────── */
+/* ── Item admin (class di bottom-nav.blade.php admin) ────── */
+.bottom-nav .nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--gray-500);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+  padding: 8px 0;
+  text-decoration: none;
+}
+.bottom-nav .nav-item svg { width: 22px; height: 22px; stroke-width: 2; }
+.bottom-nav .nav-item.active { color: var(--brand-400); }
+.bottom-nav .nav-item:hover  { color: var(--brand-300); }
+
+/* ── Center FAB (user) ───────────────────────────────────── */
 .bottom-nav-center {
   flex: 1;
   display: flex;
@@ -127,6 +151,30 @@
   text-decoration: none;
 }
 .bottom-nav-fab:active { transform: scale(.94); }
+
+/* ── Center FAB (admin) ──────────────────────────────────── */
+.bottom-nav .nav-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bottom-nav .nav-center-btn {
+  width: 52px;
+  height: 52px;
+  background: var(--brand-400);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, .4);
+  transition: transform var(--transition-fast);
+  text-decoration: none;
+}
+.bottom-nav .nav-center-btn:active { transform: scale(.94); }
+
 
 /* =============================================================
    TOPBAR ADMIN — Avatar dropdown
@@ -244,11 +292,132 @@
 .topbar-dropdown-item--danger       { color: var(--danger); }
 .topbar-dropdown-item--danger svg   { color: var(--danger); }
 .topbar-dropdown-item--danger:hover { background: var(--danger-bg); }
+/* ── Notification Button ──────────────────────────── */
+.topbar-notif-wrap {
+    position: relative;
+}
+
+.topbar-notif-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted, #6b7280);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.topbar-notif-btn:hover {
+    background: var(--color-surface-hover, #f3f4f6);
+    color: var(--color-text, #111827);
+}
+
+.notif-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+    pointer-events: none;
+}
+
+/* ── Notification Dropdown ────────────────────────── */
+.topbar-notif-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 300px;
+    background: #fff;
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.10);
+    z-index: 200;
+    overflow: hidden;
+}
+
+.topbar-notif-dropdown.open {
+    display: block;
+}
+
+.notif-dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text, #111827);
+    border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+
+.notif-see-all {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-primary, #4f46e5);
+    text-decoration: none;
+}
+
+.notif-see-all:hover { text-decoration: underline; }
+
+.notif-dropdown-body { padding: 8px 0; }
+
+.notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.12s;
+}
+
+.notif-item:hover { background: var(--color-surface-hover, #f9fafb); }
+
+.notif-item-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.notif-item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+}
+
+.notif-item-text strong { color: var(--color-text, #111827); }
+.notif-item-text span  { color: var(--color-text-muted, #6b7280); font-size: 12px; }
+
+.notif-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px 16px;
+    color: var(--color-text-muted, #9ca3af);
+    font-size: 13px;
+}
+
 /* =============================================================
    RESPONSIVE — Bottom nav & topbar visibility
    ============================================================= */
 
-/* User pages */
+/* ── User pages ──────────────────────────────────────────── */
 @media (min-width: 1024px) {
   /* Bottom nav disembunyikan di desktop (user pakai sidebar) */
   body.page-user .bottom-nav { display: none !important; }
@@ -263,5 +432,7 @@
   }
 }
 
-/* Admin pages — bottom nav tidak pernah muncul */
+/* Admin tidak pakai bottom nav di ukuran apapun */
 body.page-admin .bottom-nav { display: none !important; }
+/* Halaman profil standalone — sembunyikan semua bottom nav */
+body.page-profile .bottom-nav { display: none !important; }

@@ -236,66 +236,87 @@
 
 
 /* =============================================================
-   RESPONSIVE — Mobile & Tablet selalu collapsed
-   Desktop bisa expanded/collapsed via toggle
+   RESPONSIVE SIDEBAR
    ============================================================= */
 
-/* Mobile (< 768px): collapsed otomatis */
-@media (max-width: 767px) {
-  .admin-sidebar {
-    width: var(--admin-sidebar-collapsed-w);
-  }
-  /* Override expanded state di mobile */
-  .admin-sidebar:not(.collapsed) {
-    width: var(--admin-sidebar-collapsed-w);
-  }
-  /* Sembunyikan label di mobile selalu */
-  .admin-sidebar .admin-sidebar-brand,
-  .admin-sidebar .admin-nav-label,
-  .admin-sidebar .admin-nav-link-label,
-  .admin-sidebar .admin-nav-badge,
-  .admin-sidebar .admin-sidebar-user-info,
-  .admin-sidebar .admin-sidebar-logout span { display: none; }
-
-  .admin-sidebar .admin-nav-link {
-    justify-content: center;
-    padding: 12px 0;
-  }
-  .admin-sidebar .admin-sidebar-logout {
-    justify-content: center;
-    padding: 9px 0;
-  }
-  /* Toggle button: sembunyikan di mobile */
-  .admin-sidebar-toggle { display: none; }
-}
-
-/* Tablet (768px - 1023px): collapsed otomatis */
+/* ── Tablet (768px – 1023px) — icon-only collapsed ───────── */
 @media (min-width: 768px) and (max-width: 1023px) {
-  .admin-sidebar {
-    width: var(--admin-sidebar-collapsed-w);
-  }
-  .admin-sidebar:not(.collapsed) {
-    width: var(--admin-sidebar-collapsed-w);
-  }
-  .admin-sidebar .admin-sidebar-brand,
-  .admin-sidebar .admin-nav-label,
-  .admin-sidebar .admin-nav-link-label,
-  .admin-sidebar .admin-nav-badge,
-  .admin-sidebar .admin-sidebar-user-info,
-  .admin-sidebar .admin-sidebar-logout span { display: none; }
+    .admin-sidebar {
+        width: var(--admin-sidebar-collapsed-w);
+    }
 
-  .admin-sidebar .admin-nav-link {
-    justify-content: center;
-    padding: 12px 0;
-  }
-  .admin-sidebar .admin-sidebar-logout {
-    justify-content: center;
-    padding: 9px 0;
-  }
-  .admin-sidebar-toggle { display: none; }
+    .admin-sidebar .admin-sidebar-brand,
+    .admin-sidebar .admin-nav-label,
+    .admin-sidebar .admin-nav-link-label,
+    .admin-sidebar .admin-nav-badge,
+    .admin-sidebar .admin-sidebar-user-info,
+    .admin-sidebar .admin-sidebar-logout span { display: none; }
+
+    .admin-sidebar .admin-nav-link {
+        justify-content: center;
+        padding: 12px;
+    }
+
+    .admin-sidebar .admin-sidebar-logout {
+        justify-content: center;
+        padding: 12px;
+    }
+
+    .admin-sidebar-toggle { display: none; }
 }
 
-/* Desktop (≥ 1024px): bisa expanded/collapsed */
+/* ── Mobile (< 768px) — drawer overlay ───────────────────── */
+@media (max-width: 767px) {
+
+    /* Sidebar tersembunyi di luar layar by default */
+    .admin-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: var(--admin-sidebar-w);
+        z-index: 300;
+        transform: translateX(-100%);
+        /* Smooth drawer animation */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        /* Shadow agar terlihat jelas di atas konten */
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Saat drawer dibuka (JS toggle class .drawer-open) */
+    .admin-sidebar.drawer-open {
+        transform: translateX(0);
+    }
+
+    /* Di mobile, selalu tampilkan label — abaikan .collapsed */
+    .admin-sidebar .admin-sidebar-brand,
+    .admin-sidebar .admin-nav-label,
+    .admin-sidebar .admin-nav-link-label,
+    .admin-sidebar .admin-nav-badge,
+    .admin-sidebar .admin-sidebar-user-info,
+    .admin-sidebar .admin-sidebar-logout span { display: revert; }
+
+    .admin-sidebar .admin-nav-link {
+        justify-content: flex-start;
+        padding: 12px 16px;
+    }
+
+    /* Toggle button di dalam sidebar — sembunyikan di mobile
+       (hamburger ada di topbar, bukan di sidebar) */
+    .admin-sidebar-toggle { display: none; }
+}
+
+/* ── Desktop (≥ 1024px) — sidebar permanen ───────────────── */
 @media (min-width: 1024px) {
-  .admin-sidebar-toggle { display: flex; }
+    .admin-sidebar {
+        /* Reset transform — pastikan tidak terpengaruh mobile style */
+        transform: none !important;
+        position: fixed; /* fixed agar tetap di tempat saat scroll */
+        height: 100vh;
+        /* Transition width untuk collapse/expand */
+        transition: width var(--transition-spring);
+    }
+
+    .admin-sidebar-toggle { display: flex; }
 }

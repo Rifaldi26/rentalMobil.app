@@ -1,0 +1,129 @@
+/* =============================================================
+   PAGE: USER — Index & Show
+   ============================================================= */
+
+/* ── Stats grid ──────────────────────────────────────────── */
+.user-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.user-stat-card {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  text-align: center;
+}
+.user-stat-card__value           { font-size: 22px; font-weight: 800; color: var(--gray-900); }
+.user-stat-card__value--brand    { color: var(--brand-400); }
+.user-stat-card__value--success  { color: var(--success); }
+.user-stat-card__label           { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+
+/* ── Filter tabs row ─────────────────────────────────────── */
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+/* ── Category chip ───────────────────────────────────────── */
+.cat-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-600);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+.cat-chip:hover  { background: var(--gray-50); border-color: var(--gray-300); }
+.cat-chip.active { background: var(--brand-50); border-color: var(--brand-300); color: var(--brand-400); }
+.cat-chip--inline { flex-direction: row; min-width: auto; padding: 8px 16px; font-size: 12px; }
+
+/* ── User list ───────────────────────────────────────────── */
+.user-list { display: flex; flex-direction: column; gap: 10px; }
+
+.user-card__row  { display: flex; align-items: center; gap: 12px; }
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.user-info           { flex: 1; min-width: 0; }
+.user-info__name     { font-size: 14px; font-weight: 700; color: var(--gray-900); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-info__email    { font-size: 12px; color: var(--gray-500); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-info__date     { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+
+.user-badges { flex-shrink: 0; text-align: right; display: flex; flex-direction: column; gap: 4px; }
+
+/* ── Pill badges ─────────────────────────────────────────── */
+.badge-pill              { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; display: block; white-space: nowrap; }
+.badge-pill--blue        { background: #eff6ff; color: #1d4ed8; }
+.badge-pill--gray        { background: var(--gray-100); color: var(--gray-400); font-weight: 600; }
+.badge-pill--green       { background: #f0fdf4; color: var(--success); }
+
+/* ── Stats row (inside user card) ───────────────────────── */
+.user-stats-row          { display: flex; margin-top: 12px; border-top: 1px solid var(--gray-100); padding-top: 10px; }
+.user-stats-row__cell    { flex: 1; text-align: center; }
+.user-stats-row__divider { width: 1px; background: var(--gray-100); }
+.user-stats-row__value   { font-size: 15px; font-weight: 800; color: var(--gray-900); }
+.user-stats-row__value--brand { color: var(--brand-400); }
+.user-stats-row__value--muted { color: var(--gray-700); }
+.user-stats-row__label   { font-size: 10px; color: var(--gray-400); margin-top: 1px; }
+
+/* ── Action buttons ──────────────────────────────────────── */
+.user-actions { display: flex; gap: 8px; margin-top: 10px; }
+.btn-user-action {
+  flex: 1;
+  display: block;
+  text-align: center;
+  padding: 9px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.btn-user-action--secondary { background: var(--gray-50); border: 1px solid var(--gray-200); color: var(--gray-700); }
+.btn-user-action--primary   { background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; }
+
+/* ── User Show — Profile card ────────────────────────────── */
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--brand-100);
+  color: var(--brand-600);
+  font-size: 26px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+.profile-name   { font-size: 18px; font-weight: 800; color: var(--gray-900); }
+.profile-email  { font-size: 13px; color: var(--gray-500); margin-top: 4px; }
+.profile-phone  { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+.profile-joined { font-size: 12px; color: var(--brand-400); font-weight: 600; margin-top: 8px; }
+
+/* ── User Show — Detail stats ────────────────────────────── */
+.user-detail-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }

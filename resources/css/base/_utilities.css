@@ -1,0 +1,99 @@
+/* =============================================================
+   UTILITIES — Helper class yang dipakai di seluruh admin
+   Satu tempat, tidak boleh ada duplikat di file lain.
+   ============================================================= */
+
+/* ── Display ─────────────────────────────────────────────── */
+.is-hidden   { display: none !important; }
+.hidden      { display: none !important; }
+.flex        { display: flex; }
+.block       { display: block; }
+
+/* ── Flex helpers ────────────────────────────────────────── */
+.items-center  { align-items: center; }
+.justify-between { justify-content: space-between; }
+.flex-1        { flex: 1; }
+.gap-2         { gap: 8px; }
+.gap-3         { gap: 12px; }
+.gap-4         { gap: 16px; }
+.flex-col      { flex-direction: column; }
+.flex-wrap     { flex-wrap: wrap; }
+
+/* ── Width ───────────────────────────────────────────────── */
+.w-full { width: 100%; }
+
+/* ── Spacing — margin ────────────────────────────────────── */
+.mb-0  { margin-bottom: 0 !important; }
+.mb-8  { margin-bottom: 8px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-14 { margin-bottom: 14px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-24 { margin-bottom: 24px; }
+.mb-28 { margin-bottom: 28px; }
+
+.mt-8  { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-20 { margin-top: 20px; }
+.mt-24 { margin-top: 24px; }
+
+/* ── Text color helpers ──────────────────────────────────── */
+.text-brand   { color: var(--brand-400); }
+.text-success { color: var(--success); }
+.text-danger  { color: var(--danger); }
+.text-warning { color: var(--warning); }
+.text-muted   { color: var(--gray-500); }
+
+/* ── Divider ─────────────────────────────────────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--gray-100);
+}
+
+/* ── Empty state — base ──────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--gray-500);
+}
+
+.empty-state--sm  { padding: 20px; font-size: 13px; }
+.empty-state--lg  { padding: 80px 20px; }
+
+.empty-state__icon  {
+  font-size: 36px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  color: var(--gray-300);
+}
+.empty-state--lg .empty-state__icon { font-size: 48px; margin-bottom: 12px; }
+
+.empty-state__title { font-size: 14px; font-weight: 600; color: var(--gray-700); }
+.empty-state__sub   { font-size: 12px; margin-top: 4px; }
+.empty-state__text  { font-weight: 600; font-size: 13px; }
+
+/* ── Pagination wrapper ──────────────────────────────────── */
+.pagination-wrapper { margin-top: 16px; }
+
+/* ── Link see-all ────────────────────────────────────────── */
+.link-see-all {
+  display: block;
+  text-align: center;
+  font-size: 13px;
+  color: var(--brand-400);
+  font-weight: 600;
+  text-decoration: none;
+  padding: 8px;
+}
+
+/* ── Text empty ──────────────────────────────────────────── */
+.text-empty {
+  font-size: 13px;
+  color: var(--gray-500);
+  text-align: center;
+  padding: 20px;
+}
+.text-empty--padded { padding: 24px 0; color: var(--gray-400); }

@@ -86,3 +86,10 @@
 }
 .badge-car.driver { background: var(--accent-500); }
 .badge-car.promo  { background: var(--success); }
+/* =============================================================
+   BADGE LEGACY ALIASES
+   blade memakai badge--success, badge--danger (dua dash)
+   ============================================================= */
+.badge--success { background: var(--success-bg); color: var(--success); }
+.badge--danger  { background: var(--danger-bg);  color: var(--danger); }
+.badge--warning { background: var(--warning-bg); color: var(--warning); }

@@ -1,9 +1,9 @@
 /* =============================================================
-   FORM — Input, label, select, textarea, upload area
+   FORM — Input, label, select, textarea, upload, status-option
    ============================================================= */
 
 /* ── Group & Label ───────────────────────────────────────── */
-.form-group         { margin-bottom: 16px; }
+.form-group           { margin-bottom: 16px; }
 .form-group:last-child { margin-bottom: 0; }
 
 .form-label {
@@ -55,6 +55,9 @@
   min-height: 80px;
 }
 
+/* ── Modifiers ───────────────────────────────────────────── */
+.form-input--uppercase { text-transform: uppercase; }
+
 /* ── Field Error ─────────────────────────────────────────── */
 .field-error {
   font-size: 11px;
@@ -63,11 +66,16 @@
   margin-top: 4px;
 }
 
+/* ── Form Hint ───────────────────────────────────────────── */
+.form-hint           { font-size: 12px; margin-top: 4px; font-weight: 700; }
+.form-hint--brand    { color: var(--brand-400); }
+
 /* ── Grid helpers ────────────────────────────────────────── */
 .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.form-row    { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-/* ── Form Section (group di dalam card) ──────────────────── */
+/* ── Form Section ────────────────────────────────────────── */
 .form-section {
   background: var(--white);
   border: 1px solid var(--gray-200);
@@ -82,7 +90,7 @@
   margin-bottom: 14px;
 }
 
-/* ── Upload / Photo Area ─────────────────────────────────── */
+/* ── Upload Area ─────────────────────────────────────────── */
 .upload-area {
   border: 2px dashed var(--gray-300);
   border-radius: var(--radius-md);
@@ -96,9 +104,35 @@
   border-color: var(--brand-400);
   background: var(--brand-50);
 }
-.upload-icon { font-size: 32px; margin-bottom: 8px; }
-.upload-text { font-size: 14px; font-weight: 600; color: var(--gray-700); }
-.upload-hint { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+.upload-area__icon    { font-size: 32px; margin-bottom: 8px; }
+.upload-area__text,
+.upload-text          { font-size: 14px; font-weight: 600; color: var(--gray-700); }
+.upload-area__hint,
+.upload-hint          { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+.upload-icon          { font-size: 32px; margin-bottom: 8px; }
+
+.upload-area__preview {
+  max-height: 160px;
+  border-radius: var(--radius-sm);
+  margin-top: 12px;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* ── Foto current (preview edit mode) ───────────────────── */
+.foto-current__img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-100);
+}
+.foto-current__caption {
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-top: 4px;
+  text-align: center;
+}
 
 /* ── Syarat / Terms box ──────────────────────────────────── */
 .syarat-box {
@@ -148,224 +182,111 @@
   flex-shrink: 0;
   accent-color: var(--brand-400);
 }
-/* ── Form Row (grid 2 kolom) ──────────────────────── */
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
 
-/* ── Form Hint ────────────────────────────────────── */
-.form-hint {
-    font-size: 12px;
-    margin-top: 4px;
-    font-weight: 700;
-}
-
-.form-hint--brand { color: var(--brand-400); }
-
-/* ── Form Input Modifier ──────────────────────────── */
-.form-input--uppercase { text-transform: uppercase; }
-
-/* ── mb-0 override di dalam form ─────────────────── */
-.form-group.mb-0 { margin-bottom: 0; }
-
-/* ── Status Option ────────────────────────────────── */
+/* ── Status Option ───────────────────────────────────────── */
 .status-option {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 14px;
-    border: 2px solid var(--gray-200);
-    border-radius: var(--radius-md);
-    background: #fff;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.status-option__icon  { font-size: 20px; }
+.status-option__label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gray-700);
+  margin-top: 4px;
 }
 
 .status-option--active-success {
-    border-color: #16a34a;
-    background: #f0fdf4;
+  border-color: var(--success);
+  background: var(--success-bg);
 }
-
-.status-option--active-success .status-option__label { color: #16a34a; }
+.status-option--active-success .status-option__label { color: var(--success); }
 
 .status-option--active-danger {
-    border-color: #dc2626;
-    background: #fef2f2;
+  border-color: var(--danger);
+  background: var(--danger-bg);
 }
+.status-option--active-danger .status-option__label { color: var(--danger); }
 
-.status-option--active-danger .status-option__label { color: #dc2626; }
-
-.status-option__icon  { font-size: 22px; }
-.status-option__label { font-size: 13px; font-weight: 600; color: var(--gray-700); }
-
-/* ── Upload Area ──────────────────────────────────── */
-.upload-area {
-    border: 2px dashed var(--gray-300);
-    border-radius: var(--radius-md);
-    padding: 28px;
-    text-align: center;
-    cursor: pointer;
-    background: var(--gray-50);
-    transition: border-color 0.15s;
-}
-
-.upload-area:hover { border-color: var(--brand-400); }
-
-.upload-area__icon    { font-size: 32px; margin-bottom: 6px; }
-.upload-area__text    { font-size: 14px; font-weight: 600; color: var(--gray-700); }
-.upload-area__hint    { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
-
-.upload-area__preview {
-    max-height: 160px;
-    border-radius: var(--radius-sm);
-    margin-top: 12px;
-    object-fit: cover;
-    width: 100%;
-}
-
-/* ── Foto Current (edit mode) ─────────────────────── */
-.foto-current__img {
-    width: 100%;
-    max-height: 180px;
-    object-fit: cover;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--gray-100);
-}
-
-.foto-current__caption {
-    font-size: 12px;
-    color: var(--gray-500);
-    margin-top: 4px;
-    text-align: center;
-}
-
-/* ── Mobil Preview Card (edit mode header) ────────── */
+/* ── Mobil Preview Card (edit header) ────────────────────── */
 .mobil-preview-card {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    background: #fff;
-    border: 1px solid var(--gray-100);
-    border-radius: var(--radius-md);
-    padding: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-md);
+  padding: 14px;
 }
-
 .mobil-preview-card__thumb {
-    width: 64px;
-    height: 52px;
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    flex-shrink: 0;
-    background: var(--gray-100);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 64px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
 .mobil-preview-card__img  { width: 100%; height: 100%; object-fit: cover; }
 .mobil-preview-card__icon { font-size: 24px; }
+.mobil-preview-card__nama { font-size: 14px; font-weight: 700; }
+.mobil-preview-card__meta { font-size: 12px; color: var(--gray-500); margin-bottom: 4px; }
 
-.mobil-preview-card__nama {
-    font-size: 14px;
-    font-weight: 700;
-}
-
-.mobil-preview-card__meta {
-    font-size: 12px;
-    color: var(--gray-500);
-    margin-bottom: 4px;
-}
-
-/* ── Form Action Bar ──────────────────────────────── */
+/* ── Form Action Bar ─────────────────────────────────────── */
 .form-action-bar {
-    display: flex;
-    gap: 10px;
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid var(--gray-100);
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gray-100);
 }
-
 .btn-action-bar        { flex: 1; padding: 14px; font-size: 14px; text-align: center; }
 .btn-action-bar--grow  { flex: 2; font-size: 15px; }
 
-/* ── Utility ──────────────────────────────────────── */
-.is-hidden { display: none; }
-.mb-12     { margin-bottom: 12px; }
-/* ── Status Option (mobil create/edit) ───────────────────── */
-.status-option {
-    border: 1.5px solid var(--gray-200);
-    border-radius: var(--radius-md);
-    padding: 12px;
-    cursor: pointer;
-    text-align: center;
-    transition: all var(--transition-fast);
-    background: var(--white);
+/* ── Search Bar ──────────────────────────────────────────── */
+.search-wrapper {
+  position: relative;
+  margin-bottom: 12px;
 }
-
-.status-option--active-success {
-    border-color: #16a34a;
-    background: #f0fdf4;
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+  pointer-events: none;
+  flex-shrink: 0;
 }
-
-.status-option--active-success .status-option__label { color: #16a34a; }
-
-.status-option--active-danger {
-    border-color: #dc2626;
-    background: #fef2f2;
+.search-input {
+  width: 100%;
+  padding: 10px 14px 10px 40px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--gray-900);
+  background: var(--gray-50);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
 }
-
-.status-option--active-danger .status-option__label { color: #dc2626; }
-
-.status-option__icon  { font-size: 20px; }
-
-.status-option__label {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--gray-700);
-    margin-top: 4px;
+.search-input:focus {
+  outline: none;
+  border-color: var(--brand-400);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .08);
 }
+.search-input::placeholder { color: var(--gray-400); }
 
-/* ── Form row (2 kolom sejajar) ──────────────────────────── */
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-/* ── Form hint (preview teks kecil di bawah input) ──────── */
-.form-hint           { font-size: 12px; margin-top: 4px; font-weight: 700; }
-.form-hint--brand    { color: var(--brand-400); }
-
-/* ── Modifier input ──────────────────────────────────────── */
-.form-input--uppercase { text-transform: uppercase; }
-
-/* ── Foto current (preview foto lama saat edit) ──────────── */
-.foto-current__img {
-    width: 100%;
-    max-height: 180px;
-    object-fit: cover;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--gray-100);
-}
-
-.foto-current__caption {
-    font-size: 12px;
-    color: var(--gray-500);
-    margin-top: 4px;
-    text-align: center;
-}
-
-/* ── Form action bar (sticky bawah di create/edit) ───────── */
-.form-action-bar {
-    display: flex;
-    gap: 10px;
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid var(--gray-100);
-}
-
-.btn-action-bar       { flex: 1; padding: 14px; font-size: 14px; text-align: center; }
-.btn-action-bar--grow { flex: 2; font-size: 15px; }
+/* ── Select width helpers ────────────────────────────────── */
+.form-select--w160 { width: 160px; }
+.form-select--w110 { width: 110px; }

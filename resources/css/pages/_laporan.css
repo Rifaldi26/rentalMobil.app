@@ -1,0 +1,110 @@
+/* =============================================================
+   PAGE: LAPORAN KEUANGAN
+   ============================================================= */
+
+/* ── Filter row ──────────────────────────────────────────── */
+.filter-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.filter-row select {
+  font-size: 12px;
+  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-300);
+  background: var(--white);
+  color: var(--gray-700);
+}
+
+.btn-export {
+  font-size: 12px;
+  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--brand-400);
+  background: var(--brand-400);
+  color: var(--white);
+  font-weight: 700;
+  text-decoration: none;
+}
+.btn-export-outline {
+  font-size: 12px;
+  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-300);
+  background: var(--white);
+  color: var(--gray-700);
+  text-decoration: none;
+}
+
+/* ── Summary grid ────────────────────────────────────────── */
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.summary-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-100);
+  padding: 14px;
+}
+.summary-card--accent { background: var(--brand-400); border-color: var(--brand-400); }
+
+.summary-card__val              { font-size: 18px; font-weight: 800; color: var(--gray-900); }
+.summary-card__val--warning     { color: var(--warning); }
+.summary-card__val--danger      { color: var(--danger); }
+.summary-card__lbl              { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+.summary-card--accent .summary-card__val,
+.summary-card--accent .summary-card__lbl { color: var(--white); }
+
+/* ── Chart cards ─────────────────────────────────────────── */
+.chart-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-100);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.chart-card__title { font-size: 13px; font-weight: 700; color: var(--gray-700); margin-bottom: 14px; }
+.chart-wrap        { position: relative; height: 200px; }
+.chart-wrap--sm    { height: 180px; }
+
+/* ── Top 5 mobil terlaris ────────────────────────────────── */
+.top-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-100);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.top-rank {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--brand-50);
+  color: var(--brand-400);
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.top-rank--gold   { background: #fef3c7; color: #d97706; }
+.top-rank--silver { background: var(--gray-100); color: var(--gray-500); }
+.top-rank--bronze { background: #fef3c7; color: #92400e; }
+
+.top-info          { flex: 1; min-width: 0; }
+.top-info__nama    { font-size: 13px; font-weight: 700; color: var(--gray-900); }
+.top-info__sub     { font-size: 11px; color: var(--gray-500); margin-top: 1px; }
+
+.top-total         { text-align: right; }
+.top-total__val    { font-size: 13px; font-weight: 700; color: var(--brand-400); }
+.top-total__lbl    { font-size: 10px; color: var(--gray-500); }

@@ -1,10 +1,18 @@
-/* Base */
+/* =============================================================
+   ADMIN CSS — Entry point
+   Import order: base → components → layout → pages
+   ============================================================= */
+
+/* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ── Base ────────────────────────────────────────────────── */
 @import 'base/_variables.css';
 @import 'base/_reset.css';
 @import 'base/_typography.css';
+@import 'base/_utilities.css';
 
-/* Components */
+/* ── Components ──────────────────────────────────────────── */
 @import 'components/_sidebar-admin.css';
 @import 'components/_topbar.css';
 @import 'components/_card.css';
@@ -14,12 +22,15 @@
 @import 'components/_form.css';
 @import 'components/_feedback.css';
 
-
-/* Layout */
+/* ── Layout ──────────────────────────────────────────────── */
 @import 'layouts/_admin-layout.css';
 
-/* Pages */
+/* ── Pages ───────────────────────────────────────────────── */
 @import 'pages/_dashboard-admin.css';
 @import 'pages/_mobil.css';
 @import 'pages/_pemesanan.css';
 @import 'pages/_chat.css';
+@import 'pages/_user.css';
+@import 'pages/_laporan.css';
+@import 'pages/_jadwal.css';
+@import 'pages/_profile.css';
